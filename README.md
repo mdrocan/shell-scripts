@@ -1,5 +1,11 @@
 # Simple helper scripts
 
+### About
+
+Developed and used in OSX and some utilization of Homebrew.
+
+### The stuff
+
 - Checks for Brew updates. Possibility to install the updates for installed Brews and Casks. File:
 ```
 brew_check.sh
@@ -39,3 +45,11 @@ calculate_containers.sh
 ```
 syntaxchecker.sh
 ```
+
+## Author
+
+Designed by Mikko Drocan.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
