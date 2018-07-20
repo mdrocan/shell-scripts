@@ -2,7 +2,7 @@
 
 ### About
 
-Developed and used in OSX and some utilization of Homebrew.
+Developed and used in OS X environment. Extra packages installed mostly by Homebrew.
 
 ### The stuff
 
