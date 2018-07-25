@@ -46,6 +46,11 @@ calculate_containers.sh
 syntaxchecker.sh
 ```
 
+- Simple script to display wireless strenght signal, used SSID and the channel in use. File:
+```
+osx_wifi_strength.sh
+```
+
 ## Author
 
 Designed by Mikko Drocan.
