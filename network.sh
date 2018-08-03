@@ -5,7 +5,8 @@ scriptname=$0
 display_usage () {
   echo ""
   echo "Usage: $scriptname [user_input]"
-  echo "$scriptname : Lists basic information"
+  echo "$scriptname : Lists basic information on current connection"
+  echo "$scriptname list : Lists available WLANs"
   echo "$scriptname reset en0 : Reset certain (en0; Wifi) network adapter"
   echo ""
 }
@@ -47,11 +48,28 @@ if [ $# -eq 0 ]; then
  current_wifi_network
  echo "---------------------------"
  exit 0
-else
- if [ $# -eq 2 ]; then
-   while :
-   do
-     if [ "$1" = "reset" ]; then
+fi
+
+if [ $# -eq 1 ]; then
+  while :
+  do
+    case $1 in
+      "list")
+      /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
+      exit 0
+      ;;
+      *)
+         echo "Incorrect input. Only list -parameter accepted currently."
+         display_usage
+         exit 1
+         esac
+       done
+fi
+     
+if [ $# -eq 2 ]; then
+  while :
+  do
+    if [ "$1" = "reset" ]; then
       while :
       do
         case $2 in
@@ -71,19 +89,8 @@ else
         esac
       done
      else
-      echo "You didn't give a \"reset\" parameter, which is the only acceptable parameter with two parameters."
+      echo "You didn't give a \"reset\" as a first parameter, which is the only acceptable parameter with two parameters."
       exit 1
      fi
    done
-  else
- if [ $# -eq 1 ]; then
-  echo "Incorrect amount of arguments. Currently accepted arguments listed below."
-  display_usage
-  exit 1
- else
-  echo "Incorrect amount of arguments. Currently accepted arguments listed below."
-  display_usage
-  exit 1
  fi
- fi
-fi
