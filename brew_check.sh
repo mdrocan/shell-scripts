@@ -19,7 +19,6 @@ health_check () {
 
 cleanup () {
     brew cleanup
-    brew cask cleanup
 }
 
 brew_exist
