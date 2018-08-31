@@ -55,11 +55,11 @@ if [ $# -eq 1 ]; then
   do
     case $1 in
       "list")
-      /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
+      /System/Library/PrivateFrameworks/Apple*.framework/Versions/Current/Resources/airport -s
       exit 0
       ;;
       *)
-         echo "Incorrect input. Only list -parameter accepted currently."
+         echo "Incorrect input. Currently only list -parameter accepted as an individual parameter."
          display_usage
          exit 1
          esac
