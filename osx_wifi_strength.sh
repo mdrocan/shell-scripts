@@ -12,7 +12,7 @@ counter=0
 test () {
 	date
 	/System/Library/PrivateFrameworks/Apple*.framework/Versions/Current/Resources/airport -I \
-	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|SSID:/ {print}' | sed -e "s/ //g" \
+	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
 	| sed -e 's/agrCtlRSSI/Wifi dBm/' | sed -e '/BSSID/d'
 	sleep 1
 }
