@@ -1,4 +1,4 @@
-# Simple helper scripts
+# Few helper scripts
 
 ### About
 
