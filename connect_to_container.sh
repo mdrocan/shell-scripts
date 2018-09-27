@@ -24,7 +24,6 @@ else
 			echo "Given CONTAINER_ID input has most likely a typo."
 			echo "The correct CONTAINER_ID could be: $wanted_container"
 			echo "You gave the following CONTAINER_ID: $1"
-			## muutetaanko logiikkaa tähän hieman?
 			echo "List running containers with: $ docker ps"
 			echo ""
 			exit 1
