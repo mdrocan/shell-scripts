@@ -36,9 +36,9 @@ encode_changer.sh
 stop_all_containers.sh
 ```
 
-- Calculate the available containers. File:
+- Calculate the quota Docker images use. File:
 ```
-calculate_containers.sh
+calculate_docker_images.sh
 ```
 
 - Syntax checker using shellcheck to verify bash scripts. Checks executable directory's .sh files File:
