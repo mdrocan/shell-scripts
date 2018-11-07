@@ -27,7 +27,7 @@ if [ $# -eq 0 ]; then
   health_check
   brew update
   echo "Available packages:"
-  brew outdated --greedy
+  brew outdated
   echo "----------"
   echo "Available apps:"
   brew cask outdated --greedy
