@@ -1,6 +1,7 @@
 #! /bin/bash
 
 scriptname=$0
+sniffer=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
 
 display_usage () {
   echo ""
@@ -55,7 +56,7 @@ if [ $# -eq 1 ]; then
   do
     case $1 in
       "list")
-      /System/Library/PrivateFrameworks/Apple*.framework/Versions/Current/Resources/airport -s
+      $sniffer -s
       exit 0
       ;;
       *)

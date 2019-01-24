@@ -1,6 +1,7 @@
 #!/bin/bash
 
 scriptname=$0
+sniffer=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
 
 display_usage () {
 	echo "Usage: $scriptname [::digit::]"
@@ -9,9 +10,10 @@ display_usage () {
 
 counter=0
 
+
 test () {
 	date
-	/System/Library/PrivateFrameworks/Apple*.framework/Versions/Current/Resources/airport -I \
+	$sniffer -I \
 	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
 	| sed -e 's/agrCtlRSSI/Wifi dBm/' | sed -e '/BSSID/d'
 	sleep 1
