@@ -11,6 +11,6 @@ display_usage () {
 	echo "Analyzes all files with .sh filetype in the executed directory with shellcheck."
 }
 
-scripts="$(find . -name "*.sh")"
 shellcheck_exist
-shellcheck $scripts
+
+find . -iname "*\.sh" -print0 | xargs -0 shellcheck

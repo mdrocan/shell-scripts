@@ -41,7 +41,7 @@ if [ $# -eq 1 ]; then
 				echo "No running containers."
 				exit 1
 			else
-				docker stop $running_containers
+				docker stop "$running_containers"
 			exit 0
 			fi
 			;;
