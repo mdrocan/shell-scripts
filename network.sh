@@ -13,10 +13,10 @@ display_usage () {
 }
 
 show_address () {
-  Computer_name=$(networksetup -getcomputername)
-  echo "Computer: $Computer_name"
-  NetServices=$(networksetup -listallnetworkservices | sed 1,1d)
-  for service in ${NetServices} ; do
+  computer_name=$(networksetup -getcomputername)
+  echo "Computer: $computer_name"
+  netservices=$(networksetup -listallnetworkservices | sed 1,1d)
+  for service in ${netservices} ; do
     echo "${service}: $(networksetup -getinfo "${service}" | awk '/IP address:/ { gsub("[a-z]", ""); print $3 }' | sed 's/://g')"
   done
 }
@@ -26,8 +26,7 @@ current_wifi_network () {
 }
 
 check_wifi () {
-  check_string="Current Wi-Fi Network:"
-
+  check_string="Wi-Fi Network in use:"
   until ( networksetup -getairportnetwork "$@" | grep "${check_string}" );
   do
     sleep 1;
@@ -35,7 +34,7 @@ check_wifi () {
 }
 
 list_adapters () {
-  echo "List of network services:"
+  echo "Available network services:"
   echo "--------------------------"
   networksetup -listnetworkserviceorder | grep 'Hardware Port' | awk -F  "(, )|(: )|[)]" '{print $2 ":" $4}'
   echo "--------------------------"
