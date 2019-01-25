@@ -9,7 +9,7 @@ display_usage () {
 
 running_containers="$(docker ps -q)"
 
-if [ $# -eq 0 ]; then
+if [ $# -lt 1 ]; then
 	echo ""
 	echo "Currently running containers are:"
 	docker ps | head -n1 | awk '{print $1" ID", "NAME"}'
