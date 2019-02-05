@@ -24,6 +24,13 @@ fi
 GB="$(docker images | tail -n +2 | awk '{print $7}' | awk '/GB/ {size += $1} END {print size}')"
 MB2GB="$(docker images | tail -n +2 | awk '{print $7}' | awk '/MB/ {size += $1} END {print size/1024}')"
 
-echo "Containers in total:" "$amount_of_images"
-sum=$(echo "$GB" + "$MB2GB" | bc)
-echo "Size: ""$sum"" GB"
+echo "Container images in total:" "$amount_of_images"
+
+if [ -z "$GB" ]; then
+	echo "Used space: ""$MB2GB"" GB"
+	exit 0
+else
+	sum=$(echo "$GB" + "$MB2GB" | bc)
+	echo "Used space: ""$sum"" GB"
+	exit 0
+fi
