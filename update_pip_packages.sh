@@ -11,7 +11,7 @@ pip3_func() {
 if [ -z "$pip3" ]; then 
 	echo "pip3 is unset";
 	exit 1
-lse 
+else 
 	echo "Python3 and pip3 found from: '$pip3'";
 	pip3_func
 	exit 0
