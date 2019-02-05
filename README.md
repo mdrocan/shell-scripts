@@ -2,51 +2,51 @@
 
 ### About
 
-Developed and used in OS X environment. Extra packages installed mostly by Homebrew.
+Developed, tested and used in OS X environment. Extra packages have been mostly installed using Homebrew.
 
 ### The stuff
 
-- Check for Brew updates. Possibility to install all updates for the installed brews and casks.
+- Checks and lists available Homebrew updates. An option to install all available updates for the installed brews and casks.
 ```
 brew_check.sh
 ```
 
-- Update pip2/pip3 packages in a straightforward way.
+- Update pip3 packages and pip itself in a straightforward way.
 ```
 update_pip_packages.sh
 ```
 
-- Reset Wi-Fi network and display IP address etc. Some basic functionality still on its way.
+- Reset wireless network and display IP address etc.
 ```
 network.sh
 ```
 
-- Terminal connection to a running Docker container.
+- Open a terminal connection to a running Docker container.
 ```
 connect_to_container.sh CONTAINER_ID
 ```
 
-- Encode changer from äöå to nicer HTML encoding.
+- Change couple umlauts to nicer HTML encoding.
 ```
 encode_changer.sh
 ```
 
-- Display all running containers. Possility to stop them all.
+- List all running containers. Option to stop them.
 ```
 stop_all_containers.sh
 ```
 
-- Calculate the quota of used Docker images.
+- Calculate the used quota from saved Docker images.
 ```
 calculate_docker_images.sh
 ```
 
-- Syntax checker using Shellcheck to verify bash/sh scripts. Analyzes current directory's files ending with ".sh" file extension.
+- Syntax checker using Shellcheck to verify all bash/sh scripts (*.sh) from the current directory.
 ```
 syntaxchecker.sh
 ```
 
-- Display wireless strenght signal, used SSID and the channel in use.
+- Display wireless network's strenght signal, SSID and the channel in use.
 ```
 osx_wifi_strength.sh
 ```
