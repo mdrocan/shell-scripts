@@ -9,7 +9,7 @@ Developed, tested and used in OS X environment. Extra packages have been mostly 
 brew_check.sh
 ```
 
-- Update pip3 packages and pip itself in a straightforward way.
+- Update pip3 packages and pip itself in a straightforward way.  
 Python and pip installed as by the information shared by Homebrew: https://docs.brew.sh/Homebrew-and-Python
 One note (differing from the previous link): The commands installing at first place Pip and Setuptools executed by command: python3
 ```
