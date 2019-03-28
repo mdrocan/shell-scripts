@@ -1,6 +1,7 @@
 #! /bin/bash
 
-pip3=$(find "/usr/local/bin/" -type f -iname pip3)
+#pip3=$(find "/usr/local/bin/" -type f -iname pip3)
+pip3=$(find "/usr/local/Cellar/python/" -type f -iname pip3)
 
 pip3_func() {
 	$pip3 install --upgrade pip
