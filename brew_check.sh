@@ -48,6 +48,7 @@ else
                 brew upgrade
                 brew cask outdated --greedy | cut -d = -f 1 | xargs -n1 brew cask reinstall
                 cleanup
+                health_check
                 exit 0
                 ;;
             -h)
