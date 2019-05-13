@@ -15,6 +15,10 @@ One note (differing from the previous link): The commands installing at first pl
 ```
 update_pip_packages.sh
 ```
+- Display package information of the installed Pip packages.
+```
+info_pip_packages.sh
+```
 
 - Reset wireless network and display IP address etc.
 ```
