@@ -2,21 +2,25 @@
 
 scriptname=$0
 sniffer=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
+counter=0
 
 display_usage () {
 	echo "Usage: $scriptname [::digit::]"
 	echo "digit: Script executed this many times."
 }
 
-counter=0
-
-
-test () {
+show_connection () {
 	date
 	$sniffer -I \
 	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
 	| sed -e 's/agrCtlRSSI/Wifi dBm/' | sed -e '/BSSID/d'
-	sleep 1
+	echo "-------------"
+}
+
+signal_strength () {
+	$sniffer -I \
+	| awk 'BEGIN{FS="\n"} /agrCtlRSSI/ {print}' | sed -e 's/^[ \t]*//' \
+	| sed -e 's/agrCtlRSSI/Wifi dBm/'
 }
 
 if [ $# -gt 1 ]; then
@@ -26,18 +30,20 @@ if [ $# -gt 1 ]; then
 fi
 
 if [ $# -eq 0 ]; then
-	while true; do 
-		printf "=====""\\n"
-		test
+	show_connection
+	while [ $counter -lt 5 ]; do
+		signal_strength
+		sleep 1
+		counter=$((counter + 1))
 	done
-	exit 0
 fi
 
 if [ $# -eq 1 ]; then
+	show_connection
 	if [[ "$1" =~ ^[0-9]+$ ]]; then
 		while [ $counter -lt "$1" ]; do
-			printf "=====""\\n"
-			test
+			signal_strength
+			sleep 1
 			counter=$((counter + 1))
 		done
 		exit 0
