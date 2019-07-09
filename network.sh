@@ -41,7 +41,6 @@ list_adapters () {
   show_address
 }
 
-
 if [ $# -eq 0 ]; then
  list_adapters
  echo "---------------------------"

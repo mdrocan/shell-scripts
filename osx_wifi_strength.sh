@@ -6,7 +6,7 @@ counter=0
 
 display_usage () {
 	echo "Usage: $scriptname [::digit::]"
-	echo "digit: Script executed this many times."
+	echo "digit: How many time the script is executed."
 }
 
 show_connection () {
@@ -24,7 +24,7 @@ signal_strength () {
 }
 
 if [ $# -gt 1 ]; then
-	echo "Incorrect amount of arguments. Currently accepted arguments listed below."
+	echo "Incorrect amount of arguments.  Accepted arguments are listed below."
 	display_usage
 	exit 1
 fi
