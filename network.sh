@@ -6,9 +6,9 @@ sniffer=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
 display_usage () {
   echo ""
   echo "Usage: $scriptname [user_input]"
-  echo "$scriptname : Lists basic information on current connection"
-  echo "$scriptname list : Lists available WLANs"
-  echo "$scriptname reset en0 : Reset certain (en0; Wifi) network adapter"
+  echo "$scriptname : List basic information from the current connection."
+  echo "$scriptname list : Lists available WLANs."
+  echo "$scriptname reset en0 : Reset en0 (Wifi) network adapter."
   echo ""
 }
 
