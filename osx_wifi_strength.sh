@@ -31,6 +31,7 @@ fi
 
 if [ $# -eq 0 ]; then
 	show_connection
+	echo "Default amount of loops: 5"
 	while [ $counter -lt 5 ]; do
 		signal_strength
 		sleep 1

@@ -18,7 +18,7 @@ if [ $# -ne 0 ]; then
 fi
 
 if [[ "$amount_of_images" -eq 0 ]]; then
-	exit 1
+	exit 0
 fi
 
 GB="$(docker images | tail -n +2 | awk '{print $7}' | awk '/GB/ {size += $1} END {print size}')"
