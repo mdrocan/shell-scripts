@@ -3,15 +3,17 @@
 scriptname=$0
 
 display_usage () {
+	echo "Script info:"
+	echo "Calculates the space used by containers."
 	echo "Usage: $scriptname"
-	echo "Calculates the cotainers."
-}
+	}
 
 amount_of_images="$(docker images | tail -n +2 | awk 'END{print NR}')"
 
 if [ $# -ne 0 ]; then
 	echo ""
-	echo "Invalid arguments given. No arguments accepted."
+	echo "User error. Arguments are not accepted."
+	echo ""
 	display_usage
 	echo ""
 	exit 1
