@@ -6,7 +6,7 @@ counter=0
 
 display_usage () {
 	echo "Usage: $scriptname [::digit::]"
-	echo "digit: How many time the script is executed."
+	echo "digit: How many times the signal strength is re-tested."
 }
 
 show_connection () {
@@ -31,7 +31,7 @@ fi
 
 if [ $# -eq 0 ]; then
 	show_connection
-	echo "Default amount of loops: 5"
+	echo "Default amount of re-test loops: 5"
 	while [ $counter -lt 5 ]; do
 		signal_strength
 		sleep 1
@@ -41,6 +41,7 @@ fi
 
 if [ $# -eq 1 ]; then
 	show_connection
+	echo "Re-test loops: "$1""
 	if [[ "$1" =~ ^[0-9]+$ ]]; then
 		while [ $counter -lt "$1" ]; do
 			signal_strength
