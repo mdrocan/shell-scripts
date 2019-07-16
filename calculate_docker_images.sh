@@ -29,11 +29,12 @@ fi
 echo "Container images in total:" "$amount_of_images"
 if [ -z "$GB" ]; then
 	if [[ "$MB2GB" = 0.* ]]; then
-	 echo "Used space: ""$MB"" MB"
-	 exit 0
+		echo "Used space: ""$MB"" MB"
+	 	exit 0
+	else
+		echo "Used space: ""$MB2GB"" GB"
+		exit 0
 	fi
-	echo "Used space: ""$MB2GB"" GB"
-	exit 0
 else
 	sum=$(echo "$GB" + "$MB2GB" | bc)
 	echo "Used space: ""$sum"" GB"
