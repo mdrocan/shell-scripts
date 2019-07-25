@@ -19,6 +19,7 @@ if [ $# -lt 1 ]; then
 		docker ps | head -n1 | awk '{print $1" ID", "NAME"}'
 		docker ps | tail -n +2 | awk '{print $1, $2}'
 		echo ""
+		display_usage
 		exit 0
 	fi
 fi
