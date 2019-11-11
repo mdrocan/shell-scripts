@@ -41,7 +41,7 @@ fi
 
 if [ $# -eq 1 ]; then
 	show_connection
-	echo "Re-test loops: "$1""
+	echo "Re-test loops: ""$1"""
 	if [[ "$1" =~ ^[0-9]+$ ]]; then
 		while [ $counter -lt "$1" ]; do
 			signal_strength
