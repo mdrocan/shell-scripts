@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 usage () {
 	echo "Execute: ./connect_to_container.sh CONTAINER_ID"

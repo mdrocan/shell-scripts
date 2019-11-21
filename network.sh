@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/sh
 
 scriptname=$0
 sniffer=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
