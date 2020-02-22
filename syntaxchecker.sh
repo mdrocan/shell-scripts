@@ -8,7 +8,7 @@ shellcheck_exist () {
 
 display_usage () {
 	echo "Usage: $scriptname"
-	echo "Analyzes all files with .sh filetype in the executed directory with shellcheck."
+	echo "Analyzes all .sh files in the current directory with shellcheck."
 }
 
 shellcheck_exist

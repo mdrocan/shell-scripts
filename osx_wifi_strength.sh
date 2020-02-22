@@ -5,8 +5,9 @@ sniffer=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
 counter=0
 
 display_usage () {
-	echo "Usage: $scriptname [::digit::]"
+	echo "Usage: $scriptname []"
 	echo "digit: How many times the signal strength is re-tested."
+	echo "-h / --help : Help documentation."
 }
 
 show_connection () {
@@ -24,7 +25,7 @@ signal_strength () {
 }
 
 if [ $# -gt 1 ]; then
-	echo "Incorrect amount of arguments.  Accepted arguments are listed below."
+	echo "Incorrect amount of arguments. Accepted arguments are listed below."
 	display_usage
 	exit 1
 fi
@@ -40,18 +41,35 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ $# -eq 1 ]; then
-	show_connection
-	echo "Re-test loops: ""$1"""
-	if [[ "$1" =~ ^[0-9]+$ ]]; then
+	if [ "$1" -gt 0 ] 2>/dev/null; then
+		echo "Re-test loops: ""$1"""
 		while [ $counter -lt "$1" ]; do
+			show_connection
 			signal_strength
 			sleep 1
 			counter=$((counter + 1))
 		done
 		exit 0
 	else
-		echo "Incorrect input."
-		display_usage
-		exit 1
+	while :
+    do
+        case $1 in
+		-h)
+            echo ""
+            display_usage
+            exit 0
+            ;;
+        --help)
+            echo ""
+            display_usage
+            exit 0
+            ;;
+        *)
+            echo ""
+            echo "Incorrect parameter in use. Correct parameters given in the example below."
+            display_usage
+            exit 1
+        esac
+    done
 	fi
 fi

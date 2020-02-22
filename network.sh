@@ -78,6 +78,7 @@ if [ $# -eq 2 ]; then
            show_address
            exit 0
            ;;
+         # not implemented, to be considered:
          # "en1" )
          # "en2" )
          # "en3" )

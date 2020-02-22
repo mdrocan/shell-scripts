@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 pip3=$(find "/usr/local/bin/" -iname pip3)
 
 pip3_func() {
