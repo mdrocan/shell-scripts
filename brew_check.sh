@@ -8,7 +8,7 @@ brew_exist () {
 
 display_usage () {
     echo "Usage: $scriptname []"
-    echo " [empty]: Check available updates."
+    echo "[empty]: Check available updates."
     echo "-i : Install upgradable packages and casks."
     echo "-clean : Cleanup cache."
     echo "-h / --help : Help documentation."

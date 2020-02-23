@@ -6,8 +6,10 @@ counter=0
 
 display_usage () {
 	echo "Usage: $scriptname []"
-	echo "digit: How many times the signal strength is re-tested."
-	echo "-h / --help : Help documentation."
+	echo "[empty]: Checks connection signal 5 times."
+	echo "::digit:: How many times the signal strength is re-tested."
+	echo "-h or --help: Help documentation."
+    echo ""
 }
 
 show_connection () {
