@@ -9,7 +9,7 @@ pip3_package_update() {
 }
 
 pip3_update() {
-	if [[ $($pip3 install --upgrade pip) == "$pip_str" ]];
+	if [ "$($pip3 install --upgrade pip)" = "$pip_str" ];
 		then
 			pip3_package_update
 			exit 0
