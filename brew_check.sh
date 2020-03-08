@@ -23,13 +23,17 @@ cleanup () {
     brew cleanup
 }
 
+brew_outdated=$(brew outdated | wc -l)
+
+brew_cask_outdated=$(brew cask outdated --greedy | wc -l)
+
 list_updates () {
  brew update
-    if [[ $(brew outdated | wc -l) -eq 0 && $(brew cask outdated --greedy | wc -l) -eq 0 ]]
+    if [ "$brew_outdated" -eq 0 ] && [ "$brew_cask_outdated" -eq 0 ]
         then
             exit 0
         else
-            if [[ $(brew outdated | wc -l) -eq 0 ]]
+            if [ "$brew_outdated" -eq 0 ]
                 then
                     echo "Available apps:"
                     brew cask outdated --greedy
@@ -37,7 +41,7 @@ list_updates () {
                 else
                     echo "Available packages:"
                     brew outdated
-                    if [[ $(brew cask outdated --greedy | wc -l) -ne 0 ]]
+                    if [ "$brew_cask_outdated" -ne 0 ]
                         then
                         echo "Available apps:"
                         brew cask outdated --greedy
@@ -55,6 +59,7 @@ brew_exist
 if [ $# -eq 0 ]; then
   health_check
   list_updates
+  exit 0
 else
   if [ $# -eq 1 ]; then
     while :
