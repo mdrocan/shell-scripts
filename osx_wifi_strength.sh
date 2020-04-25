@@ -44,9 +44,9 @@ fi
 
 if [ $# -eq 1 ]; then
 	if [ "$1" -gt 0 ] 2>/dev/null; then
+		show_connection
 		echo "Re-test loops: ""$1"""
 		while [ $counter -lt "$1" ]; do
-			show_connection
 			signal_strength
 			sleep 1
 			counter=$((counter + 1))
