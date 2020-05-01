@@ -45,7 +45,7 @@ stop_all_containers.sh
 calculate_docker_images.sh
 ```
 
-- Syntax checker using Shellcheck to verify all bash/sh scripts (*.sh) from the current directory.
+- Syntax checker using Shellcheck to verify all bash/sh scripts (*.sh) from the current directory or a directory given as an argument.
 ```
 syntaxchecker.sh
 ```
