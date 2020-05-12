@@ -4,6 +4,8 @@ pip3=$(find "/usr/local/bin/" -iname pip3)
 
 pip3_func() {
 	$pip3 install --upgrade pip
+	$pip3 list
+	echo "---"
 	$pip3 list | cut -d " " -f 1 | sed 1,2d | xargs pip3 show
 }
 

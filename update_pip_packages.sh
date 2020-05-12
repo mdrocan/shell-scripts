@@ -1,7 +1,6 @@
 #!/bin/sh
 
 pip3=$(find "/usr/local/bin/" -iname pip3)
-
 pip_str="Requirement already up-to-date:"
 
 pip3_package_update() {
