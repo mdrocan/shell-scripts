@@ -6,6 +6,10 @@ brew_exist () {
     type brew >/dev/null 2>&1 || { echo >&2 "Homebrew needed to utilize this program. Installation instruction: https://brew.sh/ "; exit 1; }
 }
 
+brew_exist
+brew doctor
+brew update
+
 display_usage () {
     echo "Usage: $scriptname []"
     echo "[empty]: Check available updates."
@@ -15,20 +19,11 @@ display_usage () {
     echo ""
 }
 
-health_check () {
-    brew doctor
-}
-
-cleanup () {
-    brew cleanup
-}
-
 brew_outdated=$(brew outdated | wc -l)
 
 brew_cask_outdated=$(brew cask outdated --greedy | wc -l)
 
 list_updates () {
- brew update
     if [ "$brew_outdated" -eq 0 ] && [ "$brew_cask_outdated" -eq 0 ]
         then
             exit 0
@@ -39,7 +34,7 @@ list_updates () {
                     brew cask outdated --greedy
                     exit 0
                 else
-                    echo "Available packages:"
+                    echo "Available packages and apps:"
                     brew outdated
                     if [ "$brew_cask_outdated" -ne 0 ]
                         then
@@ -54,10 +49,7 @@ list_updates () {
         fi
 }
 
-brew_exist
-
 if [ $# -eq 0 ]; then
-  health_check
   list_updates
   exit 0
 else
@@ -66,17 +58,14 @@ else
     do
         case $1 in
             -clean)
-                cleanup
+                brew cleanup
                 exit 0
                 ;;
             -i)
-                health_check
                 brew update --greedy
                 brew upgrade
                 brew cask outdated --greedy | cut -d = -f 1 | xargs -n1 brew cask reinstall
-                cleanup
-                echo "Current state:"
-                health_check
+                brew cleanup
                 exit 0
                 ;;
             -h)
