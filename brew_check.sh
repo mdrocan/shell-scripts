@@ -64,15 +64,10 @@ else
             -i)
                 brew update --greedy
                 brew upgrade
-<<<<<<< HEAD
-                brew cask outdated --greedy | cut -d = -f 1 | xargs -n1 brew cask reinstall
-                brew cleanup
-=======
                 brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew cask reinstall
                 cleanup
                 echo "Current state:"
                 health_check
->>>>>>> b601d729db583bb003ea97ad913c6f54d6e25682
                 exit 0
                 ;;
             -h)
