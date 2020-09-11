@@ -12,8 +12,8 @@ brew update
 
 display_usage () {
     echo "Usage: $scriptname []"
-    echo "[empty]: Check available updates."
-    echo "-i : Install upgradable packages and casks."
+    echo "[empty]: Check available formulae and application updates."
+    echo "-i : Install upgradable formulae and applications."
     echo "-clean : Cleanup cache."
     echo "-h / --help : Help documentation."
     echo ""
@@ -30,15 +30,15 @@ list_updates () {
         else
             if [ "$brew_outdated" -eq 0 ]
                 then
-                    echo "Available apps:"
+                    echo "Available applications:"
                     brew outdated --cask --greedy
                     exit 0
                 else
-                    echo "Available packages and apps:"
+                    echo "Available formulae:"
                     brew outdated
                     if [ "$brew_cask_outdated" -ne 0 ]
                         then
-                        echo "Available apps:"
+                        echo "Available applications:"
                         brew outdated --cask --greedy
                         exit 0
                         else
