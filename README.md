@@ -4,7 +4,7 @@ Developed, tested and used in OS X environment. Extra packages have been mostly 
 
 ### The stuff
 
-- Checks and lists available Homebrew updates. An option to install all available updates for the installed brews and casks.
+- Checks and lists available Homebrew updates. Includes an option to install updates to the installed formulae and applications.
 The scripts doesn't check out and fix possible linking warnings - by purpose. Thus, you'll see the following kinds of messages occasionally: "Warning: You have unlinked kegs in your Cellar."
 ```
 brew_check.sh
