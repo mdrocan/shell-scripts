@@ -30,15 +30,15 @@ list_updates () {
         else
             if [ "$brew_outdated" -eq 0 ]
                 then
-                    echo "Available applications:"
+                    echo "\nAvailable applications:"
                     brew outdated --cask --greedy
                     exit 0
                 else
-                    echo "Available formulae:"
+                    echo "\nAvailable formulae:"
                     brew outdated
                     if [ "$brew_cask_outdated" -ne 0 ]
                         then
-                        echo "Available applications:"
+                        echo "\nAvailable applications:"
                         brew outdated --cask --greedy
                         exit 0
                         else
