@@ -58,14 +58,14 @@ else
     do
         case $1 in
             -clean)
-                brew cleanup
+                brew cleanup -s && rm -rf $(brew --cache)
                 exit 0
                 ;;
             -i)
                 brew update --greedy
                 brew upgrade
-                brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew reinstall
-                brew cleanup
+                brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew cask reinstall
+                brew cleanup -s && rm -rf $(brew --cache)
                 brew doctor
                 exit 0
                 ;;
