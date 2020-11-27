@@ -61,7 +61,6 @@ else
                 exit 0
                 ;;
             -i)
-                brew update --greedy
                 brew upgrade
                 brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
                 brew cleanup -s && rm -rf $(brew --cache)
