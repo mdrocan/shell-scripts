@@ -13,12 +13,11 @@ brew_outdated=$(brew outdated | wc -l)
 brew_cask_outdated=$(brew outdated --cask --greedy | wc -l)
 
 display_usage () {
-    echo "Usage: $scriptname []"
+    echo "\nUsage: $scriptname []"
     echo "[empty]: Check available updates (formulae and application)."
     echo "-i : Install updates (formulae and applications)."
     echo "-clean : Cleanup cache."
-    echo "-h / --help : Help documentation (this doc)."
-    echo ""
+    echo "-h / --help : Help documentation (this doc).\n"
 }
 
 list_updates () {
@@ -67,17 +66,14 @@ else
                 exit 0
                 ;;
             -h)
-                echo ""
                 display_usage
                 exit 0
                 ;;
             --help)
-                echo ""
                 display_usage
                 exit 0
                 ;;
             *)
-                echo ""
                 echo "Incorrect parameter in use. Correct parameters given in the example below."
                 display_usage
                 exit 1
