@@ -13,7 +13,7 @@ brew_outdated=$(brew outdated | wc -l)
 brew_cask_outdated=$(brew outdated --cask --greedy | wc -l)
 
 display_usage () {
-    echo "\nUsage: $scriptname []"
+    printf '\nUsage: %s []\n' "$scriptname"
     echo "[empty]: Check available updates (formulae and application)."
     echo "-i : Install updates (formulae and applications)."
     echo "-clean : Cleanup cache."
@@ -27,15 +27,15 @@ list_updates () {
         else
             if [ "$brew_outdated" -eq 0 ]
                 then
-                    echo "\nAvailable applications:"
+                    printf '\nAvailable applications:'
                     brew outdated --cask --greedy
                     exit 0
                 else
-                    echo "\nAvailable formulae:"
+                    printf '\nAvailable formulae:'
                     brew outdated
                     if [ "$brew_cask_outdated" -ne 0 ]
                         then
-                        echo "\nAvailable applications:"
+                        printf '\nAvailable applications:'
                         brew outdated --cask --greedy
                         exit 0
                         else
@@ -56,14 +56,19 @@ else
     do
         case $1 in
             -clean)
-                brew cleanup -s && rm -rf $(brew --cache)
+                brew cleanup -s && rm -rf "$(brew --cache)"
                 exit 0
                 ;;
             -i)
-                brew upgrade
-                brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
-                brew cleanup -s && rm -rf $(brew --cache)
-                exit 0
+                if [ "$brew_outdated" -eq 0 ] && [ "$brew_cask_outdated" -eq 0 ]
+                    then
+                        exit 0
+                    else
+                        brew upgrade
+                        brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
+                        brew cleanup -s && rm -rf "$(brew --cache)"
+                        exit 0
+                fi
                 ;;
             -h)
                 display_usage
