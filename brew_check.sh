@@ -37,9 +37,17 @@ do
         break
         ;;
     *)
+        echo "Incorrect parameter in use. Correct parameters given in the example below."
         display_usage
         exit 1
   esac
+done
+
+while [ $# -gt 1 ];
+do
+    echo "Incorrect amount of parameters in use. Correct parameters given in the example below."
+    display_usage
+    exit 1
 done
 
 #update and calculation
@@ -54,15 +62,15 @@ list_updates () {
         else
             if [ "$brew_outdated_amount" -eq 0 ]
                 then
-                    printf '\nAvailable applications:'
+                    printf '\nAvailable applications:\n'
                     brew outdated --cask --greedy
                     exit 0
                 else
-                    printf '\nAvailable formulae:'
+                    printf '\nAvailable formulae:\n'
                     brew outdated
                     if [ "$brew_cask_outdated_amount" -ne 0 ]
                         then
-                        printf '\nAvailable applications:'
+                        printf '\nAvailable applications:\n'
                         brew outdated --cask --greedy
                         exit 0
                         else
