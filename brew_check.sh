@@ -102,16 +102,12 @@ else
                         if [ "$brew_outdated_amount" -gt 0 ]
                             then
                                 brew upgrade
-                                exit 0
-                            else
-                                exit 0
-                        fi
-                        if [ "$brew_cask_outdated_amount" -gt 0 ]
+                            elif [ "$brew_cask_outdated_amount" -gt 0 ]
                             then
                                 brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
-                                exit 0
                             else
-                                exit 0
+                                echo "something wrong"
+                                exit 1
                         fi
                 brew cleanup -s && rm -rf "$(brew --cache)"
                 exit 0
