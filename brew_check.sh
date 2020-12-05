@@ -70,15 +70,15 @@ list_updates () {
                     brew outdated
                     if [ "$brew_cask_outdated_amount" -ne 0 ]
                         then
-                        printf '\nAvailable applications:\n'
-                        brew outdated --cask --greedy
-                        exit 0
+                            printf '\nAvailable applications:\n'
+                            brew outdated --cask --greedy
+                            exit 0
                         else
-                        exit 0
-                        fi
+                            exit 0
+                    fi
                 exit 0
-                fi
-        fi
+            fi
+    fi
 }
 
 #logical part
@@ -109,9 +109,9 @@ else
                                 echo "something wrong"
                                 exit 1
                         fi
-                brew cleanup -s && rm -rf "$(brew --cache)"
-                exit 0
+                    brew cleanup -s && rm -rf "$(brew --cache)"
                 fi
+                exit 0
                 ;;
             *)
                 echo "Incorrect parameter in use. Correct parameters given in the example below."
