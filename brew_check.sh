@@ -102,16 +102,17 @@ else
                         if [ "$brew_outdated_amount" -gt 0 ]
                             then
                                 brew upgrade
-                            elif [ "$brew_cask_outdated_amount" -gt 0 ]
+                                exit 0
+                        elif [ "$brew_cask_outdated_amount" -gt 0 ]
                             then
+                                echo "updateen"
                                 brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
                             else
-                                echo "something wrong"
                                 exit 1
                         fi
+                fi
                 brew cleanup -s && rm -rf "$(brew --cache)"
                 exit 0
-                fi
                 ;;
             *)
                 echo "Incorrect parameter in use. Correct parameters given in the example below."
