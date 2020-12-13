@@ -99,14 +99,8 @@ else
                     then
                         exit 0
                     else
-                        while [ "$brew_outdated_amount" -gt 0 ]
-                            do
-                                brew upgrade
-                            done
-                        while [ "$brew_cask_outdated_amount" -gt 0 ]
-                            do
-                                brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
-                            done
+                        brew upgrade
+                        brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
                 fi
                 brew cleanup -s && rm -rf "$(brew --cache)"
                 exit 0
