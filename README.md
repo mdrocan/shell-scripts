@@ -1,24 +1,21 @@
 ### About
 
-Developed, tested and used in OS X environment. Extra packages have been mostly installed using Homebrew.
+Developed, tested and used in macOS environment.
+- Extra packages in use have been mostly installed with Homebrew.
 
 ### The stuff
 
-- Checks and lists available Homebrew updates. Includes an option to install updates to the installed formulae and applications.
-The scripts doesn't check out and fix possible linking warnings - by purpose. Thus, you'll see the following kinds of messages occasionally: "Warning: You have unlinked kegs in your Cellar."
+- Checks and lists available Homebrew updates.
+- Option to install updates to the installed formulae and applications.
+The scripts does not verify and fix possible linking warnings - by purpose. Thus, you might occasionally see messages like: "Warning: You have unlinked kegs in your Cellar."
 ```
 brew_check.sh
 ```
 
-- Update pip3 packages and pip itself in a straightforward way.  
-Python and pip installed as by the information shared by Homebrew: https://docs.brew.sh/Homebrew-and-Python
-One note (differing from the previous link): The commands installing at first place Pip and Setuptools executed by command: python3
-```
-update_pip_packages.sh
-```
 - Display package information of the installed Pip packages.
+- Update pip3 packages and pip itself in a straightforward way.
 ```
-info_pip_packages.sh
+pip_check.sh
 ```
 
 - Reset wireless network and display IP address etc.
@@ -26,14 +23,14 @@ info_pip_packages.sh
 network.sh
 ```
 
+- Display wireless network's strenght signal, SSID and the channel in use.
+```
+osx_wifi_strength.sh
+```
+
 - Open a terminal connection to a running Docker container.
 ```
 connect_to_container.sh CONTAINER_ID
-```
-
-- Change couple umlauts to nicer HTML encoding.
-```
-encode_changer.sh
 ```
 
 - List all running containers. Option to stop them.
@@ -46,14 +43,14 @@ stop_all_containers.sh
 calculate_docker_images.sh
 ```
 
+- Change couple umlauts to nicer HTML encoding.
+```
+encode_changer.sh
+```
+
 - Syntax checker using Shellcheck to verify all bash/sh scripts (*.sh) from the current directory or a directory given as an argument.
 ```
 syntaxchecker.sh
-```
-
-- Display wireless network's strenght signal, SSID and the channel in use.
-```
-osx_wifi_strength.sh
 ```
 
 ## Author
