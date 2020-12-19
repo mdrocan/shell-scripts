@@ -1,6 +1,7 @@
 ### About
 
-Developed, tested and used in OS X environment. Extra packages have been mostly installed using Homebrew.
+Developed, tested and used in macOS environment.
+- Extra packages in use have been mostly installed with Homebrew.
 
 ### The stuff
 
