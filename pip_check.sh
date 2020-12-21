@@ -30,7 +30,7 @@ fi
 while [ $# -gt 1 ];
 do
     echo "Incorrect amount of parameters in use. Correct parameters given in the example below."
-    display_usage
+    display_help
     exit 1
 done
 
@@ -56,14 +56,14 @@ else
         		;;
             *)
                 echo "Incorrect parameter in use. Correct parameters given in the example below."
-                display_usage
+                display_help
                 exit 1
                 ;;
             esac
         done
     else
         echo "Incorrect amount of arguments. Currently accepted arguments listed below."
-        display_usage
+        display_help
         exit 1
     fi
 fi
