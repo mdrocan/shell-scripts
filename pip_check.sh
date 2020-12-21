@@ -56,7 +56,7 @@ else
         		;;
             *)
                 echo "Incorrect parameter in use. Correct parameters given in the example below."
-                display_usage
+                display_help
                 exit 1
                 ;;
             esac
