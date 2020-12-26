@@ -1,10 +1,9 @@
 #!/bin/sh
 
 scriptname=$0
-sniffer=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
+listener=$(find "/System/Library/PrivateFrameworks/" -type f -iname airport)
 
 display_usage () {
-  echo ""
   echo "Usage: $scriptname [user_input]"
   echo "$scriptname : List basic information from the current connection."
   echo "$scriptname list : Lists available WLANs."
@@ -19,10 +18,6 @@ show_address () {
   for service in ${netservices} ; do
     echo "${service}: $(networksetup -getinfo "${service}" | awk '/IP address:/ { gsub("[a-z]", ""); print $3 }' | sed 's/://g')"
   done
-}
-
-current_wifi_network () {
-	networksetup -getairportnetwork en0
 }
 
 check_wifi () {
@@ -44,7 +39,8 @@ list_adapters () {
 if [ $# -eq 0 ]; then
  list_adapters
  echo "---------------------------"
- current_wifi_network
+ #displays current wifi network
+ networksetup -getairportnetwork en0
  echo "---------------------------"
  exit 0
 fi
@@ -54,15 +50,23 @@ if [ $# -eq 1 ]; then
   do
     case $1 in
       "list")
-      $sniffer -s
-      exit 0
-      ;;
+        $listener -s
+        exit 0
+        ;;
+      -h)
+        display_usage
+        exit 0
+        ;;
+      --help)
+        display_usage
+        exit 0
+        ;;
       *)
-         echo "Incorrect input. Currently only list -parameter accepted as an individual parameter."
-         display_usage
-         exit 1
-         esac
-       done
+        echo "Incorrect input. Currently only list -parameter accepted as an individual parameter."
+        display_usage
+        exit 1
+    esac
+  done
 fi
      
 if [ $# -eq 2 ]; then
@@ -78,7 +82,7 @@ if [ $# -eq 2 ]; then
            show_address
            exit 0
            ;;
-         # not implemented, to be considered:
+         # not implemented:
          # "en1" )
          # "en2" )
          # "en3" )

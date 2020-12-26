@@ -6,8 +6,8 @@ counter=0
 
 display_usage () {
 	echo "Usage: $scriptname []"
-	echo "[empty]: Checks connection signal 5 times."
-	echo "::digit:: How many times the signal strength is re-tested."
+	echo "[empty]: Check connection signal, tested 10 times."
+	echo "::digit:: How many times the signal strength is tested."
 	echo "-h or --help: Help documentation."
     echo ""
 }
@@ -34,8 +34,7 @@ fi
 
 if [ $# -eq 0 ]; then
 	show_connection
-	echo "Default amount of re-test loops: 5"
-	while [ $counter -lt 5 ]; do
+	while [ $counter -lt 10 ]; do
 		signal_strength
 		sleep 1
 		counter=$((counter + 1))
@@ -57,17 +56,14 @@ if [ $# -eq 1 ]; then
     do
         case $1 in
 		-h)
-            echo ""
             display_usage
             exit 0
             ;;
         --help)
-            echo ""
             display_usage
             exit 0
             ;;
         *)
-            echo ""
             echo "Incorrect parameter in use. Correct parameters given in the example below."
             display_usage
             exit 1
