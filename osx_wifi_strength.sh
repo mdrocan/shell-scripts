@@ -15,8 +15,8 @@ display_usage () {
 show_connection () {
 	date
 	$sniffer -I \
-	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
-	| sed -e 's/agrCtlRSSI/Wifi dBm/' | sed -e '/BSSID/d'
+	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|CtlNoise|lastTxRate|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
+	| sed -e 's/agrCtlRSSI/Wifi dBm/g' -e 's/lastTxRate/Tx Rate/g' -e 's/agrCtlNoise/Noise/g' | sed -e '/BSSID/d'
 	echo "-------------"
 }
 
