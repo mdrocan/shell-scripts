@@ -15,7 +15,7 @@ display_usage () {
 
 show_connection () {
 	echo "-------------"
-	date "+TIME: %H:%M:%S"
+	date "+Time: %H:%M:%S"
 	$listener -I \
 	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|CtlNoise|lastTxRate|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
 	-e 's/agrCtlRSSI/Wifi dBm/g' -e 's/lastTxRate/Tx Rate/g' -e 's/agrCtlNoise/Noise level/g' -e '/BSSID/d'
@@ -28,7 +28,6 @@ if [ $# -gt 1 ]; then
 fi
 
 if [ $# -eq 0 ]; then
-    date
 	printf "\nCurrent connection:\n"
 	show_connection
 	printf "\nTest loops (10), with 3 seconds wait time:\n"
