@@ -48,23 +48,23 @@ else
         case $1 in
             -i)
                 pip3_package_update
-				exit 0
+                exit 0
                 ;;
-		    -h)
-        		display_help
-        		exit 0
-        		;;
-    		--help)
-        		display_help
-        		exit 0
-        		;;
+            -h)
+                display_help
+                exit 0
+                ;;
+            --help)
+                display_help
+                exit 0
+                ;;
             *)
                 echo "Incorrect parameter in use. Correct parameters given in the example below."
                 display_help
                 exit 1
                 ;;
-            esac
-        done
+        esac
+    done
     else
         echo "Incorrect amount of arguments. Currently accepted arguments listed below."
         display_help
