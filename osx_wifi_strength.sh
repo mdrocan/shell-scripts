@@ -6,15 +6,16 @@ counter=0
 
 display_usage () {
 	echo "Usage: $scriptname []"
-	echo "[empty]: Check connection signal, will be tested 10 times."
-	echo "::digit:: How many times the signal strength is tested."
-	eccho "-test: Looping forever (for connection testing purpose)."
+	echo "[empty]: Check connection signal, will be tested 10 times. Default loop 3 seconds."
+	echo "::digit:: How many times the signal strength is tested. Default loop 3 seconds."
+	eccho "-test: Looping forever (for connection testing purpose). Default loop 3 seconds."
 	echo "-h or --help: Help documentation."
     echo ""
 }
 
 show_connection () {
 	echo "-------------"
+	date "+Time: %H:%M:%S"
 	$listener -I \
 	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|CtlNoise|lastTxRate|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
 	-e 's/agrCtlRSSI/Wifi dBm/g' -e 's/lastTxRate/Tx Rate/g' -e 's/agrCtlNoise/Noise level/g' -e '/BSSID/d'
@@ -27,10 +28,9 @@ if [ $# -gt 1 ]; then
 fi
 
 if [ $# -eq 0 ]; then
-    date
 	printf "\nCurrent connection:\n"
 	show_connection
-	printf "\n10 test loops:\n"
+	printf "\nTest loops (10), with 3 seconds wait time:\n"
 	while [ $counter -lt 10 ]; do
 	  sleep 3
 	  show_connection
@@ -40,10 +40,9 @@ fi
 
 if [ $# -eq 1 ]; then
 	if [ "$1" -gt 0 ] 2>/dev/null; then
-		date
 		printf "\nCurrent connection:\n"
 		show_connection
-		printf "\nRe-test loops:%s\n" "$1"
+		printf "\nTest loops (%s) with 3 seconds wait time.\n" "$1"
 		while [ $counter -lt "$1" ]; do
 		  sleep 3
 		  show_connection
@@ -55,7 +54,6 @@ if [ $# -eq 1 ]; then
     do
         case $1 in
 		-test)
-		  date
 		  printf "\nCurrent connection:\n"
 		  while :
 		  do
