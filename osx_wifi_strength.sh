@@ -8,7 +8,7 @@ display_usage () {
 	echo "Usage: $scriptname []"
 	echo "[empty]: Check connection signal, will be tested 10 times. Default loop 3 seconds."
 	echo "::digit:: How many times the signal strength is tested. Default loop 3 seconds."
-	eccho "-test: Looping forever (for connection testing purpose). Default loop 3 seconds."
+	echo "-test: Looping forever (for connection testing purpose). Default loop 3 seconds."
 	echo "-h or --help: Help documentation."
     echo ""
 }
