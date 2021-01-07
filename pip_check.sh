@@ -4,13 +4,8 @@ scriptname=$0
 pip3=$(find "/usr/local/bin/" -iname pip3)
 
 pip3_package_list() {
-	$pip3 list
-	echo "---"
-	echo "Available updates:"
+    echo "Available updates:"
     $pip3 list --outdated --format=freeze --no-cache-dir
-    echo "---"
-    echo "Installed packages:"
-    $pip3 list | cut -d " " -f 1 | sed 1,2d | xargs pip3 show
 }
 
 pip3_package_update() {
@@ -21,8 +16,9 @@ pip3_package_update() {
 #help template
 display_help () {
     printf '\nUsage: %s []\n' "$scriptname"
-    echo "[empty]: List installed pip packages."
-    echo "-i : Install updates."
+    echo "[empty]: Check for updates."
+    echo "-i / --install: Install updates."
+    echo "-l / --list: List installed pip packages."
     echo "-h / --help : Help documentation (this doc).\n"
 }
 
@@ -46,15 +42,18 @@ else
     while :
     do
         case $1 in
-            -i)
+            -i | --install)
                 pip3_package_update
                 exit 0
                 ;;
-            -h)
-                display_help
+            -l | --list)
+                $pip3 list
+                echo "---"
+                echo "Installed packages:"
+                $pip3 list | cut -d " " -f 1 | sed 1,2d | xargs pip3 show
                 exit 0
                 ;;
-            --help)
+            -h | --help)
                 display_help
                 exit 0
                 ;;
