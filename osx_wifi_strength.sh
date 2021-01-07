@@ -20,7 +20,7 @@ show_connection () {
 	| awk 'BEGIN{FS="\n"} /channel|CtlRSSI|CtlNoise|lastTxRate|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
 	-e 's/agrCtlRSSI/Wifi dBm/g' -e 's/lastTxRate/Tx Rate/g' -e 's/agrCtlNoise/Noise level/g' -e '/BSSID/d'
 	SNR=$($listener -I | awk 'BEGIN{FS="\n"} /CtlRSSI|CtlNoise/ {print}' | awk '{print $NF}' | awk 'NR==1{SNR = $0; next} { SNR -= $0} END {print SNR}')
-	echo "SNR value: "$SNR
+	echo "SNR value: ""$SNR"
 }
 
 if [ $# -gt 1 ]; then
