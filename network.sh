@@ -8,6 +8,7 @@ display_usage () {
   echo "$scriptname : Basic information from the current connection."
   echo "$scriptname list : Lists available Wifi networks with basic details."
   echo "$scriptname reset en0 : Reset en0 (Wifi) network adapter."
+  echo "$scriptname -h | --help : This help document."
   echo ""
 }
 
@@ -21,10 +22,11 @@ show_address () {
 }
 
 check_wifi () {
-  check_string="Wi-Fi Network in use:"
+  check_string="Current Wi-Fi Network:"
+  echo "----"
   until ( networksetup -getairportnetwork "$@" | grep "${check_string}" );
   do
-    sleep 1;
+    sleep 2;
   done
 }
 
@@ -53,16 +55,12 @@ if [ $# -eq 1 ]; then
         $listener -s
         exit 0
         ;;
-      -h)
-        display_usage
-        exit 0
-        ;;
-      --help)
+      -h | --help)
         display_usage
         exit 0
         ;;
       *)
-        echo "Incorrect input. Currently only list -parameter accepted as an individual parameter."
+        echo "Incorrect input."
         display_usage
         exit 1
     esac
@@ -77,9 +75,16 @@ if [ $# -eq 2 ]; then
       do
         case $2 in
          "en0" )
-           sudo ifconfig "$2" down && sudo ifconfig "$2" up
-           check_wifi "$2"
+           echo "Shutting down "$2""
+           sudo ifconfig "$2" down
+           sleep 3
            show_address
+           sleep 3
+           echo "---- \nEnabling "$2""
+           sudo ifconfig "$2" up
+           sleep 3
+           show_address
+           check_wifi "$2"
            exit 0
            ;;
          # not implemented:
