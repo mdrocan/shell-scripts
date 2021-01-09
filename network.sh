@@ -75,12 +75,13 @@ if [ $# -eq 2 ]; then
       do
         case $2 in
          "en0" )
-           echo "Shutting down "$2""
+           echo "Shutting down" "$2"
            sudo ifconfig "$2" down
            sleep 3
            show_address
            sleep 3
-           echo "---- \nEnabling "$2""
+           echo "----"
+           echo "Enabling " "$2"
            sudo ifconfig "$2" up
            sleep 3
            show_address
