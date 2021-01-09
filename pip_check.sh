@@ -4,11 +4,11 @@ scriptname=$0
 pip3=$(find "/usr/local/bin/" -iname pip3)
 
 pip3_package_list() {
-    if [ -z "$($pip3 list --outdated --format=freeze --no-cache-dir)" ]; then
+    if [ -z "$($pip3 list --outdated)" ]; then
         echo "No updates."
     else
         echo "Available updates:"
-        $pip3 list --outdated --format=freeze --no-cache-dir
+        $pip3 list --outdated
     fi
 }
 
