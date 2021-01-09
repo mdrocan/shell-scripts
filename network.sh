@@ -22,7 +22,7 @@ show_address () {
 }
 
 check_wifi () {
-  check_string="Current Wi-Fi Network:"
+  check_string=$(networksetup -getairportnetwork en0 | awk '{print $1, $2, $3}')
   echo "----"
   until ( networksetup -getairportnetwork "$@" | grep "${check_string}" );
   do
@@ -75,6 +75,8 @@ if [ $# -eq 2 ]; then
       do
         case $2 in
          "en0" )
+           check_wifi "$2"
+           echo "----"
            echo "Shutting down" "$2"
            sudo ifconfig "$2" down
            sleep 3
