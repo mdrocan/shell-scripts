@@ -2,13 +2,14 @@
 
 scriptname=$0
 pip3=$(find "/usr/local/bin/" -iname pip3)
+available_packages=$($pip3 list --outdated)
 
 pip3_package_list() {
-    if [ -z "$($pip3 list --outdated)" ]; then
+    if [ -z "$available_packages" ]; then
         echo "No updates."
     else
         echo "Available updates:"
-        $pip3 list --outdated
+        echo $available_packages | awk '{print $9, $10, "->", $11}'
     fi
 }
 
