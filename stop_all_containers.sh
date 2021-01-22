@@ -34,11 +34,7 @@ if [ $# -eq 1 ]; then
 	while :
 	do
 		case $1 in
-			-h)
-			display_usage
-			exit 0
-			;;
-			--help)
+			-h | --help)
 			display_usage
 			exit 0
 			;;

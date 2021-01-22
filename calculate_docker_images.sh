@@ -52,12 +52,7 @@ if [ $# -eq 1 ]; then
 	while :
     do
         case $1 in
-            -h)
-			echo ""
-			display_usage
-			exit 0
-			;;
-            --help)
+            -h | --help)
 			echo ""
 			display_usage
 			exit 0

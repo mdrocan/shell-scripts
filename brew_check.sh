@@ -10,7 +10,7 @@ brew_exist () {
 display_usage () {
     printf '\nUsage: %s []\n' "$scriptname"
     echo "[empty]: Check available updates (formulae and application)."
-    echo "-i : Install updates (formulae and applications)."
+    echo "-i / --install : Install updates (formulae and applications)."
     echo "-clean : Cleanup cache."
     echo "-h / --help : Help documentation (this doc).\n"
 }
@@ -22,18 +22,14 @@ brew_exist
 while [ $# -eq 1 ];
 do
   case "$1" in
-    -h)
-        display_usage
-        exit 0
-        ;;
-    --help)
+    -h | --help)
         display_usage
         exit 0
         ;;
     -clean)
         break
         ;;
-    -i)
+    -i | --install)
         break
         ;;
     *)
@@ -94,7 +90,7 @@ else
                 brew cleanup -s && rm -rf "$(brew --cache)"
                 exit 0
                 ;;
-            -i)
+            -i | --install)
                 if [ "$brew_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]
                     then
                         exit 0
