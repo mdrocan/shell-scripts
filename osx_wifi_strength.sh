@@ -64,14 +64,10 @@ if [ $# -eq 1 ]; then
 		  done
 		  exit 0
 		  ;;
-		-h)
+		-h | --help)
           display_usage
           exit 0
     	  ;;
-        --help)
-          display_usage
-          exit 0
-          ;;
         *)
           echo "Incorrect parameter in use. Correct parameters given in the example below."
           display_usage
