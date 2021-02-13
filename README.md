@@ -53,6 +53,11 @@ encode_changer.sh
 syntaxchecker.sh
 ```
 
+- Notification about decreased battery charging level. Current value set to 50%, using it through crontab.
+```
+charging_level.sh
+```
+
 ## Author
 
 Designed by Mikko Drocan.
