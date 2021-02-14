@@ -53,7 +53,7 @@ encode_changer.sh
 syntaxchecker.sh
 ```
 
-- Notification about decreased battery charging level. Current check value set to 30%, using it through crontab schedule on hourly basis.
+- Notification about decreased battery charging level. Current check value set to 30%, using it through crontab scheduling. If you set the Script Editor notification settings from Banners to Alerts the messages stay visible until you close the notification. 
 ```
 charging_level.sh
 ```
