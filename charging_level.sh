@@ -14,6 +14,12 @@ charge_state_inactive () {
 osascript -e 'display notification "Battery is discharging currently." with title "Check charging!"'
 }
 
+if [ "$charge_state2" = "AC attached; not charging present: true" ]; then
+  charge_state_inactive
+else
+    :
+fi
+
 if [ "$batterylevel" -lt 30 ]; then
   notification30
     if [ "$charge_state" = "discharging" ] || [ "$charge_state2" = "AC attached; not charging present: true" ]; then
