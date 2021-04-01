@@ -8,8 +8,7 @@ pip3_package_list() {
     if [ -z "$available_packages" ]; then
         echo "No updates."
     else
-        echo "Available updates:"
-        echo $available_packages | awk '{print $9, $10, "->", $11}'
+        $pip3 list --outdated
     fi
 }
 
