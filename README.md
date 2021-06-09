@@ -1,4 +1,4 @@
-### About
+# About
 
 Developed, tested and used in macOS environment.
 - Additional packages used in the scripts have been mostly installed with Homebrew.
