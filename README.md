@@ -30,7 +30,7 @@ connect_to_container.sh CONTAINER_ID
 ```
 encode_changer.sh
 ```
-- Change couple umlauts to nicer HTML encoding.
+- Change few umlauts to nicer HTML encoding.
 
 ```
 network.sh
