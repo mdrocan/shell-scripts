@@ -5,7 +5,7 @@ Helper scripts for various cases.
 - Developed, tested and used in macOS environment.
 - Additional packages used in the scripts have been mostly installed with Homebrew.
 
-### The stuff
+## The stuff
 
 ```
 brew_check.sh
