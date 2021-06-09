@@ -61,10 +61,10 @@ wifi_strength.sh
 - Display wireless network's strenght signal, SSID and the channel in use.
 - Looping by default 10 test rounds.
 
-## Author
+### Author
 
 Designed by Mikko Drocan.
 
-## License
+### License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
