@@ -5,7 +5,7 @@ Helper scripts for various cases.
 - Developed, tested and used in macOS environment.
 - Additional packages used in the scripts have been mostly installed with Homebrew.
 
-## The stuff
+## Script details
 
 ```bash
 brew_check.sh
@@ -53,7 +53,7 @@ stop_all_containers.sh
 ```bash
 syntaxchecker.sh
 ```
-- Syntax checker using Shellcheck to verify all bash/sh scripts (*.sh) from the current directory or a directory given as an argument.
+- Syntax checker using Shellcheck to verify all shellscripts from the current directory or a directory given as an argument.
 
 ```bash
 wifi_strength.sh
