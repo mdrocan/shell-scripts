@@ -1,7 +1,7 @@
 #!/bin/sh
 
 scriptname=$0
-pip3=$(find "/usr/local/bin/" -iname pip3)
+pip3=$(find "/usr/local/bin/" -iname pip3.10)
 available_packages=$($pip3 list --outdated)
 
 pip3_package_list() {
