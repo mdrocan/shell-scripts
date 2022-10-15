@@ -13,7 +13,7 @@ installed with Homebrew.
 
 ## Script details
 
-Short description for the scripts available
+Short descriptions of the scripts.
 
 ```sh
 brew_check.sh
