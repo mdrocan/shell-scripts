@@ -1,5 +1,5 @@
 ---
-Linter verification
+Linter verified
 
 [![GitHub Super-Linter](https://github.com/mdrocan/shell-scripts/workflows/CI-check/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
