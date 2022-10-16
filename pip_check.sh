@@ -2,19 +2,19 @@
 
 scriptname=$0
 pip3=$(find "/usr/local/bin/" -iname pip3.10)
-available_packages=$($pip3 list --outdated)
+available_packages=$($pip3 list -o)
 
 pip3_package_list() {
     if [ -z "$available_packages" ]; then
         echo "No updates."
     else
-        $pip3 list --outdated
+        $pip3 list -o
     fi
 }
 
 pip3_package_update() {
 	$pip3 install --upgrade pip
-	$pip3 list --outdated --format=freeze --no-cache-dir | cut -d = -f 1 | xargs -n1 "$pip3" install -U
+	$pip3 list -o --no-cache-dir | sed 1,2d | awk '{print $1}'| xargs -n1 "$pip3" install -U
 }
 
 #help template
