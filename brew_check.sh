@@ -72,7 +72,7 @@ list_updates () {
                         else
                             exit 0
                     fi
-                exit 0
+#                exit 0
             fi
     fi
 }
@@ -80,7 +80,7 @@ list_updates () {
 #logical part
 if [ $# -eq 0 ]; then
   list_updates
-  exit 0
+#  exit 0
 else
   if [ $# -eq 1 ]; then
     while :
