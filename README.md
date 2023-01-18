@@ -25,6 +25,7 @@ brew_check.sh
 calculate_docker_images.sh
 ```
 - Calculate the used quota from saved Docker images.
+- Requirement: docker running
 
 ```sh
 charging_level.sh
@@ -38,6 +39,7 @@ visible until you close the notification.
 connect_to_container.sh CONTAINER_ID
 ```
 - Open a terminal connection to a running Docker container.
+- Requirement: docker running
 
 ```sh
 encode_changer.sh
@@ -47,7 +49,8 @@ encode_changer.sh
 ```sh
 network.sh
 ```
-- Reset wireless network and display IP address etc.
+- Display network information and connected wireless network.
+- Possibility to reset wireless network.
 
 ```sh
 pip_check.sh
@@ -59,6 +62,7 @@ pip_check.sh
 stop_all_containers.sh
 ```
 - List all running containers. Option to stop them.
+- Requirement: docker running
 
 ```sh
 syntaxchecker.sh
