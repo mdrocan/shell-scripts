@@ -22,12 +22,6 @@ brew_check.sh
 - Note: The scripts does not verify and fix possible linking warnings - by purpose. Thus, you might occasionally see messages like: "Warning: You have unlinked kegs in your Cellar."
 
 ```sh
-calculate_docker_images.sh
-```
-- Calculate the used quota from saved Docker images.
-- Requirement: docker running
-
-```sh
 charging_level.sh
 ```
 - Notification about decreased battery charging level. Current check value \
