@@ -1,7 +1,7 @@
 #!/bin/sh
 
 scriptname=$0
-pip3=$(find "/usr/local/bin/" -iname pip3.10)
+pip3=$(find "/opt/homebrew/opt/python@3.11/bin" -iname pip3.11)
 available_packages=$($pip3 list -o)
 
 pip3_package_list() {
