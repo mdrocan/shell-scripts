@@ -1,7 +1,13 @@
 #!/bin/sh
 
 scriptname=$0
-pip3=$(find "/opt/homebrew/opt/python@3.11/bin" -iname pip3.11)
+
+hw=$(uname -m)
+if [ "$hw" = x86_64 ]; then
+    pip3=$(find "/usr/local/bin/" -iname pip3.11)
+else
+    pip3=$(find "/opt/homebrew/opt/python@3.11/bin" -iname pip3.11)
+fi
 available_packages=$($pip3 list -o)
 
 pip3_package_list() {
