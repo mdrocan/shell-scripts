@@ -5,8 +5,10 @@ scriptname=$0
 hw=$(uname -m)
 if [ "$hw" = x86_64 ]; then
     pip3=$(find "/usr/local/bin/" -iname pip3.11)
-else
+elif [ "$hw" = arm64 ]; then
     pip3=$(find "/opt/homebrew/opt/python@3.11/bin" -iname pip3.11)
+else
+    exit 1
 fi
 available_packages=$($pip3 list -o)
 
