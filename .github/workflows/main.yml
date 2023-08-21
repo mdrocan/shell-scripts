@@ -1,4 +1,4 @@
-name: CI-check
+name: MegaLinter
 
 on:
   push:
