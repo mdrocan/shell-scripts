@@ -1,6 +1,6 @@
 #!/bin/sh
 
-usage () {
+usage() {
 	echo "Execute: ./connect_to_container.sh CONTAINER_ID"
 }
 

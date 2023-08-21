@@ -2,7 +2,7 @@
 
 scriptname=$0
 
-display_usage () {
+display_usage() {
 	echo "Usage: $scriptname [-y]"
 	echo "-y : Stop all running containers."
 }
@@ -31,26 +31,26 @@ if [ $# -gt 1 ]; then
 fi
 
 if [ $# -eq 1 ]; then
-	while :
-	do
+	while :; do
 		case $1 in
-			-h | --help)
+		-h | --help)
 			display_usage
 			exit 0
 			;;
-			-y)
+		-y)
 			if [ -z "$running_containers" ]; then
 				echo "No running containers."
 				exit 1
 			else
 				docker stop "$running_containers"
-			exit 0
+				exit 0
 			fi
 			;;
-			*)
+		*)
 			echo "Incorrect input."
 			display_usage
 			exit 1
+			;;
 		esac
 	done
 fi
