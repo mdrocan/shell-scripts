@@ -2,11 +2,10 @@
 
 scriptname=$0
 
-display_usage () {
+display_usage() {
 	echo "Usage: $scriptname ::file::"
 	echo "::file:: - File that needs to be re-encoded."
 }
-
 
 if [ $# -eq 0 ]; then
 	echo "You must define the file that is re-encoded."
@@ -20,21 +19,21 @@ if [ $# -gt 1 ]; then
 	exit 1
 fi
 
-change () {
+change() {
 	if [ $# -eq 1 ]; then
-		sed "s/ä/\\&auml;/g; s/ö/\\&ouml;/g; s/å/\\&aring;/g; s/Ä/\\&Auml;/g; s/Ö/\\&Ouml;/g; s/Å/\\&Aring;/g" "$1" > "$1"_changed; echo "Change done. Fixed file:" "$1"_changed
+		sed "s/ä/\\&auml;/g; s/ö/\\&ouml;/g; s/å/\\&aring;/g; s/Ä/\\&Auml;/g; s/Ö/\\&Ouml;/g; s/Å/\\&Aring;/g" "$1" >"$1"_changed
+		echo "Change done. Fixed file:" "$1"_changed
 		exit 0
 	fi
 }
 
-while :
-do
+while :; do
 	case $1 in
-		-h | --help)
+	-h | --help)
 		display_usage
 		exit 0
 		;;
-		*)
+	*)
 		if [ -f "$1" ]; then
 			change "$@"
 		else
@@ -42,5 +41,6 @@ do
 			display_usage
 			exit 1
 		fi
+		;;
 	esac
 done

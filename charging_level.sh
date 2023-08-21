@@ -6,27 +6,27 @@ charge_state=$(pmset -g batt | sed 1d | awk '{print$4}' | sed 's/.$//')
 
 charge_state2=$(pmset -g batt | sed 1d | awk '{for (i=4; i<NF; i++) printf $i " "; print $NF}')
 
-notification30 () {
-osascript -e 'display notification "Battery level below 30%." with title "Check charging!"'
+notification30() {
+	osascript -e 'display notification "Battery level below 30%." with title "Check charging!"'
 }
 
-charge_state_inactive () {
-osascript -e 'display notification "Battery is discharging currently." with title "Check charging!"'
+charge_state_inactive() {
+	osascript -e 'display notification "Battery is discharging currently." with title "Check charging!"'
 }
 
 if [ "$charge_state2" = "AC attached; not charging present: true" ]; then
-  charge_state_inactive
+	charge_state_inactive
 else
-    :
+	:
 fi
 
 if [ "$batterylevel" -lt 30 ]; then
-  notification30
-    if [ "$charge_state" = "discharging" ] || [ "$charge_state2" = "AC attached; not charging present: true" ]; then
-      charge_state_inactive
-    else
-      exit 0
-    fi
+	notification30
+	if [ "$charge_state" = "discharging" ] || [ "$charge_state2" = "AC attached; not charging present: true" ]; then
+		charge_state_inactive
+	else
+		exit 0
+	fi
 else
-  :
+	:
 fi
