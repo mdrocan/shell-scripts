@@ -1,8 +1,6 @@
 # About
 
-Linter verified software
-
-[![GitHub Super-Linter](https://github.com/mdrocan/shell-scripts/workflows/CI-check/badge.svg)](https://github.com/marketplace/actions/super-linter)
+[![MegaLinter](https://github.com/mdrocan/shell-scripts/workflows/MegaLinter/badge.svg?branch=master)](https://github.com/mdrocan/shell-scripts/actions?query=workflow%3AMegaLinter+branch%3Amaster)
 
 Helper scripts for various cases.
 
