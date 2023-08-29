@@ -11,6 +11,8 @@ else
 	exit 1
 fi
 
+echo "brew installation location: $brew"
+
 brew_exist() {
 	type brew >/dev/null 2>&1 || {
 		echo >&2 "Homebrew needed to utilize this program. Installation instruction: https://brew.sh/ "
