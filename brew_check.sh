@@ -2,6 +2,17 @@
 
 scriptname=$0
 
+hw=$(uname -m)
+if [ "$hw" = x86_64 ]; then
+	brew=$(find "/usr/local/bin/" -iname brew)
+elif [ "$hw" = arm64 ]; then
+	brew=$(find "/opt/homebrew/bin/" -iname brew)
+else
+	exit 1
+fi
+
+echo "brew installation location: $brew"
+
 brew_exist() {
 	type brew >/dev/null 2>&1 || {
 		echo >&2 "Homebrew needed to utilize this program. Installation instruction: https://brew.sh/ "
