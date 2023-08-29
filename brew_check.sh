@@ -4,9 +4,9 @@ scriptname=$0
 
 hw=$(uname -m)
 if [ "$hw" = x86_64 ]; then
-	brew=$(find "/usr/local/bin/" -iname brew)
+	brew=$(find "/usr/local/bin" -iname brew)
 elif [ "$hw" = arm64 ]; then
-	brew=$(find "/opt/homebrew/bin/" -iname brew)
+	brew=$(find "/opt/homebrew/bin" -iname brew)
 else
 	exit 1
 fi
