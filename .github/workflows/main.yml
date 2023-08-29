@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0
 
       - name: Lint Code Base
-        uses: oxsecurity/megalinter/flavors/ci_light@v7.3.0
+        uses: oxsecurity/megalinter/flavors/ci_light@beta
         env:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: master
