@@ -6,7 +6,7 @@ hw=$(uname -m)
 if [ "$hw" = x86_64 ]; then
 	pip3=$(find "/usr/local/bin" -iname pip3.11)
 elif [ "$hw" = arm64 ]; then
-	pip3=$(find "/opt/homebrew/opt/python@3.11/bin" -iname pip3.11)
+	pip3=$(find "/opt/homebrew/opt/python@3.12/bin" -iname pip3.12)
 else
 	exit 1
 fi
