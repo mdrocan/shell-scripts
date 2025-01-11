@@ -3,10 +3,8 @@
 scriptname=$0
 
 hw=$(uname -m)
-if [ "$hw" = x86_64 ]; then
-	pip3=$(find "/usr/local/bin" -iname pip3.11)
-elif [ "$hw" = arm64 ]; then
-	pip3=$(find "/opt/homebrew/opt/python@3.12/bin" -iname pip3.12)
+if [ "$hw" = arm64 ]; then
+	pip3=$(find "/opt/homebrew/opt/python@3.13/bin" -iname pip3.13)
 else
 	exit 1
 fi
