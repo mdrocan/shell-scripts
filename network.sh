@@ -22,9 +22,21 @@ show_address() {
 }
 
 check_wifi() {
-	check_string=$(networksetup -getairportnetwork en0 | awk '{print $1, $2, $3}')
+	attempt=0
+	max_attempts=30
 	echo "----"
-	until (networksetup -getairportnetwork "$@" | grep "${check_string}"); do
+	while :; do
+		wifi_status=$(networksetup -getairportnetwork "$1" 2>/dev/null)
+		case "$wifi_status" in
+		"Current Wi-Fi Network: "*)
+			return 0
+			;;
+		esac
+		attempt=$((attempt + 1))
+		if [ "$attempt" -ge "$max_attempts" ]; then
+			echo "Timed out waiting for Wi-Fi association on $1" >&2
+			return 1
+		fi
 		sleep 2
 	done
 }
@@ -83,7 +95,9 @@ if [ $# -eq 2 ]; then
 			while :; do
 				case $2 in
 				"en0")
-					check_wifi "$2"
+					if ! check_wifi "$2"; then
+						exit 1
+					fi
 					echo "----"
 					echo "Shutting down" "$2"
 					sudo ifconfig "$2" down
@@ -95,7 +109,9 @@ if [ $# -eq 2 ]; then
 					sudo ifconfig "$2" up
 					sleep 3
 					show_address
-					check_wifi "$2"
+					if ! check_wifi "$2"; then
+						exit 1
+					fi
 					exit 0
 					;;
 				# not implemented:
