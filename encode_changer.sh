@@ -20,27 +20,22 @@ if [ $# -gt 1 ]; then
 fi
 
 change() {
-	if [ $# -eq 1 ]; then
-		sed "s/ä/\\&auml;/g; s/ö/\\&ouml;/g; s/å/\\&aring;/g; s/Ä/\\&Auml;/g; s/Ö/\\&Ouml;/g; s/Å/\\&Aring;/g" "$1" >"$1"_changed
-		echo "Change done. Fixed file:" "$1"_changed
-		exit 0
-	fi
+	sed "s/ä/\\&auml;/g; s/ö/\\&ouml;/g; s/å/\\&aring;/g; s/Ä/\\&Auml;/g; s/Ö/\\&Ouml;/g; s/Å/\\&Aring;/g" "$1" >"$1"_changed
+	echo "Change done. Fixed file: $1"_changed
 }
 
-while :; do
-	case $1 in
-	-h | --help)
+case $1 in
+-h | --help)
+	display_usage
+	exit 0
+	;;
+*)
+	if [ -f "$1" ]; then
+		change "$1"
+	else
+		echo "$1: File not available."
 		display_usage
-		exit 0
-		;;
-	*)
-		if [ -f "$1" ]; then
-			change "$@"
-		else
-			echo "$1" ": File not available."
-			display_usage
-			exit 1
-		fi
-		;;
-	esac
-done
+		exit 1
+	fi
+	;;
+esac
