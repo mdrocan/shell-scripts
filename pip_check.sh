@@ -3,23 +3,33 @@
 scriptname=$0
 
 hw=$(uname -m)
-if command -v pip3 >/dev/null 2>&1; then
-	pip3=$(command -v pip3)
-elif [ "$hw" = arm64 ]; then
+if command -v brew >/dev/null 2>&1; then
+	brew_python_prefix=$(brew --prefix python 2>/dev/null)
+	for candidate in "$brew_python_prefix/bin/pip3" "$brew_python_prefix/libexec/bin/pip3"; do
+		if [ -x "$candidate" ]; then
+			pip3=$candidate
+			break
+		fi
+	done
+fi
+
+if [ -z "$pip3" ] && [ "$hw" = arm64 ]; then
 	for candidate in /opt/homebrew/bin/pip3 /opt/homebrew/opt/python@*/libexec/bin/pip3 /opt/homebrew/opt/python@*/bin/pip3*; do
 		if [ -x "$candidate" ]; then
 			pip3=$candidate
 			break
 		fi
 	done
-elif [ "$hw" = x86_64 ]; then
+elif [ -z "$pip3" ] && [ "$hw" = x86_64 ]; then
 	for candidate in /usr/local/bin/pip3 /usr/local/opt/python@*/libexec/bin/pip3 /usr/local/opt/python@*/bin/pip3*; do
 		if [ -x "$candidate" ]; then
 			pip3=$candidate
 			break
 		fi
 	done
-else
+elif [ -z "$pip3" ] && command -v pip3 >/dev/null 2>&1; then
+	pip3=$(command -v pip3)
+elif [ -z "$pip3" ]; then
 	echo "Unsupported architecture: $hw" >&2
 	exit 1
 fi
