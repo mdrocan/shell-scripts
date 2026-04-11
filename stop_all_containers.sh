@@ -12,7 +12,7 @@ running_containers="$(docker ps -q)"
 if [ $# -lt 1 ]; then
 	if [ -z "$running_containers" ]; then
 		echo "No running containers."
-		exit 1
+		exit 0
 	else
 		echo ""
 		echo "Currently running containers are:"
@@ -40,9 +40,10 @@ if [ $# -eq 1 ]; then
 		-y)
 			if [ -z "$running_containers" ]; then
 				echo "No running containers."
-				exit 1
+				exit 0
 			else
-				docker stop "$running_containers"
+				# shellcheck disable=SC2086
+				docker stop $running_containers
 				exit 0
 			fi
 			;;
