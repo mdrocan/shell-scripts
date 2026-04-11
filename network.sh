@@ -16,7 +16,7 @@ show_address() {
 	computer_name=$(networksetup -getcomputername)
 	echo "Computer: $computer_name"
 	netservices=$(networksetup -listallnetworkservices | sed 1,1d)
-	for service in ${netservices}; do
+	echo "$netservices" | while IFS= read -r service; do
 		echo "${service}: $(networksetup -getinfo "${service}" | awk '/IP address:/ { gsub("[a-z]", ""); print $3 }' | sed 's/://g')"
 	done
 }
@@ -39,10 +39,17 @@ list_adapters() {
 
 if [ $# -eq 0 ]; then
 	list_adapters
-	echo "---------------------------"
 	#displays current wifi network
-	networksetup -getairportnetwork en0
-	echo "---------------------------"
+	wifi_network=$(networksetup -getairportnetwork en0)
+	case "$wifi_network" in
+	"You are not associated with an AirPort network."*) ;;
+	*)
+		echo "---------------------------"
+		echo "$wifi_network"
+		echo "---------------------------"
+		;;
+	esac
+	echo ""
 	exit 0
 fi
 
@@ -50,6 +57,10 @@ if [ $# -eq 1 ]; then
 	while :; do
 		case $1 in
 		"list")
+			if [ -z "$listener" ]; then
+				echo "airport utility not found" >&2
+				exit 1
+			fi
 			$listener -s
 			exit 0
 			;;
@@ -93,7 +104,7 @@ if [ $# -eq 2 ]; then
 				# "en3" )
 				# "bridge0" )
 				*)
-					echo "You didn't give the correct interface (en0) to be reseted."
+					echo "You didn't give the correct interface (en0) to be reset."
 					exit 1
 					;;
 				esac
