@@ -16,15 +16,27 @@ show_address() {
 	computer_name=$(networksetup -getcomputername)
 	echo "Computer: $computer_name"
 	netservices=$(networksetup -listallnetworkservices | sed 1,1d)
-	for service in ${netservices}; do
+	echo "$netservices" | while IFS= read -r service; do
 		echo "${service}: $(networksetup -getinfo "${service}" | awk '/IP address:/ { gsub("[a-z]", ""); print $3 }' | sed 's/://g')"
 	done
 }
 
 check_wifi() {
-	check_string=$(networksetup -getairportnetwork en0 | awk '{print $1, $2, $3}')
+	attempt=0
+	max_attempts=30
 	echo "----"
-	until (networksetup -getairportnetwork "$@" | grep "${check_string}"); do
+	while :; do
+		wifi_status=$(networksetup -getairportnetwork "$1" 2>/dev/null)
+		case "$wifi_status" in
+		"Current Wi-Fi Network: "*)
+			return 0
+			;;
+		esac
+		attempt=$((attempt + 1))
+		if [ "$attempt" -ge "$max_attempts" ]; then
+			echo "Timed out waiting for Wi-Fi association on $1" >&2
+			return 1
+		fi
 		sleep 2
 	done
 }
@@ -39,10 +51,17 @@ list_adapters() {
 
 if [ $# -eq 0 ]; then
 	list_adapters
-	echo "---------------------------"
 	#displays current wifi network
-	networksetup -getairportnetwork en0
-	echo "---------------------------"
+	wifi_network=$(networksetup -getairportnetwork en0)
+	case "$wifi_network" in
+	"You are not associated with an AirPort network."*) ;;
+	*)
+		echo "---------------------------"
+		echo "$wifi_network"
+		echo "---------------------------"
+		;;
+	esac
+	echo ""
 	exit 0
 fi
 
@@ -50,6 +69,10 @@ if [ $# -eq 1 ]; then
 	while :; do
 		case $1 in
 		"list")
+			if [ -z "$listener" ]; then
+				echo "airport utility not found" >&2
+				exit 1
+			fi
 			$listener -s
 			exit 0
 			;;
@@ -72,7 +95,9 @@ if [ $# -eq 2 ]; then
 			while :; do
 				case $2 in
 				"en0")
-					check_wifi "$2"
+					if ! check_wifi "$2"; then
+						exit 1
+					fi
 					echo "----"
 					echo "Shutting down" "$2"
 					sudo ifconfig "$2" down
@@ -84,7 +109,9 @@ if [ $# -eq 2 ]; then
 					sudo ifconfig "$2" up
 					sleep 3
 					show_address
-					check_wifi "$2"
+					if ! check_wifi "$2"; then
+						exit 1
+					fi
 					exit 0
 					;;
 				# not implemented:
@@ -93,7 +120,7 @@ if [ $# -eq 2 ]; then
 				# "en3" )
 				# "bridge0" )
 				*)
-					echo "You didn't give the correct interface (en0) to be reseted."
+					echo "You didn't give the correct interface (en0) to be reset."
 					exit 1
 					;;
 				esac

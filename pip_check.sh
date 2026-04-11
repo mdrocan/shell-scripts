@@ -3,18 +3,43 @@
 scriptname=$0
 
 hw=$(uname -m)
-if [ "$hw" = arm64 ]; then
-	pip3=$(find "/opt/homebrew/opt/python@3.13/bin" -iname pip3.13)
-else
+if command -v brew >/dev/null 2>&1; then
+	brew_python_prefix=$(brew --prefix python 2>/dev/null)
+	for candidate in "$brew_python_prefix/bin/pip3" "$brew_python_prefix/libexec/bin/pip3"; do
+		if [ -x "$candidate" ]; then
+			pip3=$candidate
+			break
+		fi
+	done
+fi
+
+if [ -z "$pip3" ] && [ "$hw" = arm64 ]; then
+	for candidate in /opt/homebrew/bin/pip3 /opt/homebrew/opt/python@*/libexec/bin/pip3 /opt/homebrew/opt/python@*/bin/pip3*; do
+		if [ -x "$candidate" ]; then
+			pip3=$candidate
+			break
+		fi
+	done
+elif [ -z "$pip3" ] && [ "$hw" = x86_64 ]; then
+	for candidate in /usr/local/bin/pip3 /usr/local/opt/python@*/libexec/bin/pip3 /usr/local/opt/python@*/bin/pip3*; do
+		if [ -x "$candidate" ]; then
+			pip3=$candidate
+			break
+		fi
+	done
+elif [ -z "$pip3" ] && command -v pip3 >/dev/null 2>&1; then
+	pip3=$(command -v pip3)
+elif [ -z "$pip3" ]; then
+	echo "Unsupported architecture: $hw" >&2
 	exit 1
 fi
-available_packages=$($pip3 list -o)
 
 pip3_package_list() {
+	available_packages=$($pip3 list -o)
 	if [ -z "$available_packages" ]; then
 		echo "No updates."
 	else
-		$pip3 list -o
+		echo "$available_packages"
 	fi
 }
 
@@ -29,11 +54,11 @@ display_help() {
 	echo "[empty]: Check for updates."
 	echo "-i / --install: Install updates."
 	echo "-l / --list: List installed pip packages."
-	echo "-h / --help : Help documentation (this doc).\n"
+	printf -- '-h / --help : Help documentation (this doc).\n\n'
 }
 
 if [ -z "$pip3" ]; then
-	echo "pip3 is unset"
+	echo "pip3 not found in Homebrew Python installation" >&2
 	exit 1
 fi
 
@@ -58,7 +83,7 @@ else
 				$pip3 list
 				echo "---"
 				echo "Installed packages:"
-				$pip3 list | cut -d " " -f 1 | sed 1,2d | xargs pip3 show
+				$pip3 list | cut -d " " -f 1 | sed 1,2d | xargs "$pip3" show
 				exit 0
 				;;
 			-h | --help)

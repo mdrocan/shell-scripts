@@ -26,13 +26,13 @@ display_usage() {
 	echo "[empty]: Check available updates (formulae and application)."
 	echo "-i / --install : Install updates (formulae and applications)."
 	echo "-clean : Cleanup cache."
-	echo "-h / --help : Help documentation (this doc).\n"
+	printf -- '-h / --help : Help documentation (this doc).\n\n'
 }
 
 # preparation part
 brew_exist
 
-#faster help section
+#faster help and clean section
 while [ $# -eq 1 ]; do
 	case "$1" in
 	-h | --help)
@@ -40,7 +40,8 @@ while [ $# -eq 1 ]; do
 		exit 0
 		;;
 	-clean)
-		break
+		brew cleanup -s && rm -rf "$(brew --cache)"
+		exit 0
 		;;
 	-i | --install)
 		break
@@ -95,10 +96,6 @@ else
 	if [ $# -eq 1 ]; then
 		while :; do
 			case $1 in
-			-clean)
-				brew cleanup -s && rm -rf "$(brew --cache)"
-				exit 0
-				;;
 			-i | --install)
 				if [ "$brew_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
 					exit 0

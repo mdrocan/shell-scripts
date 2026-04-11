@@ -17,12 +17,12 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
       - name: Lint Code Base
-        uses: oxsecurity/megalinter/flavors/ci_light@beta
+        uses: oxsecurity/megalinter/flavors/ci_light@8fbdead70d1409964ab3d5afa885e18ee85388bb
         env:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: master
