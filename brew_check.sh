@@ -2,66 +2,57 @@
 
 scriptname=$0
 
-hw=$(uname -m)
-if [ "$hw" = x86_64 ]; then
-	brew=$(find "/usr/local/bin" -iname brew)
-elif [ "$hw" = arm64 ]; then
-	brew=$(find "/opt/homebrew/bin" -iname brew)
-else
+# Verify Homebrew is available
+if ! command -v brew >/dev/null 2>&1; then
+	echo "Error: Homebrew is required. Install it from https://brew.sh/" >&2
 	exit 1
 fi
 
-echo "brew installation location: $brew"
-
-brew_exist() {
-	type brew >/dev/null 2>&1 || {
-		echo >&2 "Homebrew needed to utilize this program. Installation instruction: https://brew.sh/ "
-		exit 1
-	}
-}
-
-#help template
 display_usage() {
-	printf '\nUsage: %s []\n' "$scriptname"
-	echo "[empty]: Check available updates (formulae and application)."
-	echo "-i / --install : Install updates (formulae and applications)."
-	echo "-clean : Cleanup cache."
-	printf -- '-h / --help : Help documentation (this doc).\n\n'
+	printf '\nUsage: %s [OPTION]\n' "$scriptname"
+	echo "Check and manage Homebrew updates."
+	echo ""
+	echo "Options:"
+	echo "  [none]         Check for available updates"
+	echo "  -i, --install  Install available updates"
+	echo "  -clean         Clean Homebrew cache"
+	echo "  -h, --help     Show this help message"
+	printf '\n'
 }
 
-# preparation part
-brew_exist
-
-#faster help and clean section
-while [ $# -eq 1 ]; do
-	case "$1" in
-	-h | --help)
-		display_usage
-		exit 0
-		;;
-	-clean)
-		brew cleanup -s && rm -rf "$(brew --cache)"
-		exit 0
-		;;
-	-i | --install)
-		break
-		;;
-	*)
-		echo "Incorrect parameter in use. Correct parameters given in the example below."
-		display_usage
-		exit 1
-		;;
-	esac
-done
-
-while [ $# -gt 1 ]; do
-	echo "Incorrect amount of parameters in use. Correct parameters given in the example below."
+# Parameter validation
+if [ $# -gt 1 ]; then
+	echo "Error: Too many arguments." >&2
 	display_usage
 	exit 1
-done
+fi
 
-#update and calculation
+# Handle options that don't require fetching update data
+case $1 in
+-h | --help)
+	display_usage
+	exit 0
+	;;
+-clean)
+	brew cleanup -s && rm -rf "$(brew --cache)"
+	exit 0
+	;;
+"" | -i | --install)
+	# These require fresh package data — continue below
+	;;
+*)
+	echo "Error: Unknown option '$1'" >&2
+	display_usage
+	exit 1
+	;;
+esac
+
+# Fetch latest package data.
+# Note: brew update syncs the local formula registry before checking for outdated
+# packages. Without it, 'brew outdated' would report stale data. This is intentional
+# — even a check-only run needs current data to be accurate.
 brew update
+
 brew_formula_outdated=$(brew outdated --formula)
 brew_cask_outdated=$(brew outdated --cask --greedy)
 
@@ -79,59 +70,35 @@ fi
 
 list_updates() {
 	if [ "$brew_formula_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
-		exit 0
-	else
-		if [ "$brew_formula_outdated_amount" -eq 0 ]; then
-			printf '\nAvailable applications:\n'
-			echo "$brew_cask_outdated"
-			exit 0
-		else
-			printf '\nAvailable formulae:\n'
-			echo "$brew_formula_outdated"
-			if [ "$brew_cask_outdated_amount" -ne 0 ]; then
-				printf '\nAvailable applications:\n'
-				echo "$brew_cask_outdated"
-				exit 0
-			else
-				exit 0
-			fi
-			#                exit 0
-		fi
+		echo "No updates available."
+		return
+	fi
+	if [ "$brew_formula_outdated_amount" -ne 0 ]; then
+		printf '\nAvailable formulae:\n'
+		echo "$brew_formula_outdated"
+	fi
+	if [ "$brew_cask_outdated_amount" -ne 0 ]; then
+		printf '\nAvailable applications:\n'
+		echo "$brew_cask_outdated"
 	fi
 }
 
-#logical part
-if [ $# -eq 0 ]; then
+# Main logic
+case $1 in
+"")
 	list_updates
-#  exit 0
-else
-	if [ $# -eq 1 ]; then
-		while :; do
-			case $1 in
-			-i | --install)
-				if [ "$brew_formula_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
-					exit 0
-				else
-					if [ "$brew_formula_outdated_amount" -ne 0 ]; then
-						brew upgrade
-					fi
-					if [ "$brew_cask_outdated_amount" -ne 0 ]; then
-						printf '%s\n' "$brew_cask_outdated" | awk '{print $1}' | xargs -n1 brew upgrade --cask
-					fi
-				fi
-				brew cleanup -s && rm -rf "$(brew --cache)"
-				exit 0
-				;;
-			*)
-				echo "Incorrect parameter in use. Correct parameters given in the example below."
-				display_usage
-				exit 1
-				;;
-			esac
-		done
+	;;
+-i | --install)
+	if [ "$brew_formula_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
+		echo "No updates available."
 	else
-		echo "Incorrect amount of arguments. Currently accepted arguments listed below."
-		display_usage
-		exit 1
+		if [ "$brew_formula_outdated_amount" -ne 0 ]; then
+			brew upgrade
+		fi
+		if [ "$brew_cask_outdated_amount" -ne 0 ]; then
+			printf '%s\n' "$brew_cask_outdated" | awk '{print $1}' | xargs -n1 brew upgrade --cask
+		fi
 	fi
-fi
+	brew cleanup -s && rm -rf "$(brew --cache)"
+	;;
+esac

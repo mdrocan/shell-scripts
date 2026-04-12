@@ -1,36 +1,29 @@
 #!/bin/sh
 
 scriptname=$0
+wifi_interface="en0"
 counter=0
+
+ensure_wifi_tools_ready() {
+	for cmd in networksetup system_profiler ipconfig ifconfig awk sed head date; do
+		if ! command -v "$cmd" >/dev/null 2>&1; then
+			echo "Error: Required command not found: $cmd" >&2
+			exit 1
+		fi
+	done
+}
 
 display_usage() {
 	echo "Usage: $scriptname [command] [options]"
 	echo ""
 	echo "Commands:"
-	echo "  (no args)         : Show network adapters, IP addresses, and current Wi-Fi."
-	echo "  wifi              : Show current Wi-Fi signal strength."
-	echo "  wifi <n>          : Check signal strength n times (3s interval)."
+	echo "  (no args)         : Show current Wi-Fi signal."
+	echo "  signal            : Show current Wi-Fi signal metrics."
+	echo "  signal <n>        : Repeat signal check n times (3s interval)."
 	echo "  list              : List previously-connected Wi-Fi networks."
-	echo "  reset en0         : Reset the en0 (Wi-Fi) adapter."
+	echo "  reset             : Reset the Wi-Fi adapter."
 	echo "  -h | --help       : Show this help."
 	echo ""
-}
-
-show_address() {
-	computer_name=$(networksetup -getcomputername)
-	echo "Computer: $computer_name"
-	netservices=$(networksetup -listallnetworkservices | sed 1,1d)
-	echo "$netservices" | while IFS= read -r service; do
-		echo "${service}: $(networksetup -getinfo "${service}" | awk '/IP address:/ { gsub("[a-z]", ""); print $3 }' | sed 's/://g')"
-	done
-}
-
-list_adapters() {
-	echo "Available network services:"
-	echo "--------------------------"
-	networksetup -listnetworkserviceorder | grep 'Hardware Port' | awk -F "(, )|(: )|[)]" '{print $2 ":" $4}'
-	echo "--------------------------"
-	show_address
 }
 
 show_wifi_signal() {
@@ -48,6 +41,8 @@ show_wifi_signal() {
 	fi
 
 	date "+Time: %H:%M:%S"
+	ip_addr=$(ipconfig getifaddr "$wifi_interface" 2>/dev/null)
+	[ -n "$ip_addr" ] && echo "IP Address: $ip_addr"
 	CHANNEL=$(echo "$section" | sed -n 's/^[[:space:]]*Channel: //p' | head -1)
 	SIG_NOISE=$(echo "$section" | sed -n 's/^[[:space:]]*Signal \/ Noise: //p' | head -1)
 	TX_RATE=$(echo "$section" | sed -n 's/^[[:space:]]*Transmit Rate: //p' | head -1)
@@ -71,7 +66,7 @@ list_wifi_networks() {
 	echo "Previously-connected Wi-Fi Networks:"
 	echo "------------------------------------"
 	# Show networks this machine has connected to before (not redacted by macOS)
-	networksetup -listpreferredwirelessnetworks en0
+	networksetup -listpreferredwirelessnetworks "$wifi_interface"
 }
 
 check_wifi() {
@@ -94,82 +89,89 @@ check_wifi() {
 	done
 }
 
-reset_adapter() {
-	case "$1" in
-	en0)
-		if ! check_wifi "$1"; then
-			exit 1
-		fi
-		echo "----"
-		echo "Shutting down $1"
-		sudo ifconfig "$1" down
-		sleep 3
-		show_address
-		sleep 3
-		echo "----"
-		echo "Enabling $1"
-		sudo ifconfig "$1" up
-		sleep 3
-		show_address
-		if ! check_wifi "$1"; then
-			exit 1
-		fi
-		;;
-	*)
-		echo "Unsupported interface: $1. Only en0 is currently supported."
+reset_wifi() {
+	# Verify the interface exists before attempting reset.
+	# check_wifi is not used here because it polls for active connectivity —
+	# if Wi-Fi is broken, it would time out and prevent the reset entirely.
+	if ! ifconfig "$wifi_interface" >/dev/null 2>&1; then
+		echo "Error: Wi-Fi interface $wifi_interface not found." >&2
 		exit 1
-		;;
-	esac
+	fi
+	echo "----"
+	echo "Shutting down $wifi_interface"
+	sudo ifconfig "$wifi_interface" down
+	sleep 3
+	echo "----"
+	echo "Enabling $wifi_interface"
+	sudo ifconfig "$wifi_interface" up
+	sleep 3
+	if ! check_wifi "$wifi_interface"; then
+		exit 1
+	fi
 }
 
-if [ $# -eq 0 ]; then
-	list_adapters
-	wifi_raw=$(system_profiler SPAirPortDataType -detailLevel basic 2>/dev/null)
-	wifi_name=$(echo "$wifi_raw" | awk '/Current Network Information:/{found=1; next} found{gsub(/^[[:space:]]+|:[[:space:]]*$/, ""); print; exit}')
-	if [ -n "$wifi_name" ]; then
-		echo "---------------------------"
-		echo "Current Wi-Fi Network: $wifi_name"
-		echo "---------------------------"
-	fi
-	echo ""
-	exit 0
-fi
-
 case $1 in
-wifi)
-	printf "\nCurrent connection:\n"
+"")
+	if [ $# -gt 1 ]; then
+		echo "Error: Unexpected arguments for default command." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
+	show_wifi_signal
+	;;
+signal)
+	if [ $# -gt 2 ]; then
+		echo "Error: 'signal' takes at most one argument: <n>." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
 	show_wifi_signal
 	if [ -n "$2" ]; then
 		if [ "$2" -gt 0 ] 2>/dev/null; then
-			printf "\nTest loops (%s) with 3 seconds wait time.\n" "$2"
+			printf "\nRepeating (%s) times with 3 second interval.\n" "$2"
 			while [ $counter -lt "$2" ]; do
 				sleep 3
 				show_wifi_signal
 				counter=$((counter + 1))
 			done
 		else
-			echo "Invalid option for wifi: $2"
+			echo "Error: Invalid repeat count: $2" >&2
 			display_usage
 			exit 1
 		fi
 	fi
 	;;
 list)
-	list_wifi_networks
-	;;
-reset)
-	if [ -z "$2" ]; then
-		echo "Error: reset requires an interface name (e.g. en0)."
+	if [ $# -gt 1 ]; then
+		echo "Error: 'list' takes no arguments." >&2
 		display_usage
 		exit 1
 	fi
-	reset_adapter "$2"
+	ensure_wifi_tools_ready
+	list_wifi_networks
+	;;
+reset)
+	if [ $# -gt 1 ]; then
+		echo "Error: 'reset' takes no arguments." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
+	reset_wifi
 	;;
 -h | --help)
+	if [ $# -gt 1 ]; then
+		echo "Error: 'help' takes no arguments." >&2
+		display_usage
+		exit 1
+	fi
 	display_usage
+	exit 0
 	;;
 *)
-	echo "Unknown command: $1"
+	echo "Error: Unknown command '$1'" >&2
 	display_usage
 	exit 1
 	;;

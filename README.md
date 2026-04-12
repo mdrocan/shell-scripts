@@ -11,7 +11,7 @@ chmod +x ./*.sh
 ./syntaxchecker.sh
 ./brew_check.sh --help
 ./docker_tools.sh --help
-./network_tools.sh --help
+./wifi_tools.sh --help
 ./pip_check.sh --help
 ```
 
@@ -20,7 +20,7 @@ Use `--help` first on each script to verify expected behavior in your environmen
 ## Design
 
 - Keep tools small, composable, and script-friendly.
-- Prefer one script per domain (package management, Docker, networking, linting).
+- Prefer one script per domain (package management, Docker, Wi-Fi networking, linting).
 - Use subcommands where workflows naturally belong together.
 
 ## Requirements
@@ -37,21 +37,32 @@ Use `--help` first on each script to verify expected behavior in your environmen
 |--------------------|-----------------------------------------|----------------------------------------------|------------------------------------|
 | `brew_check.sh`    | Check/install Homebrew updates          | May install/update packages; may clean cache | Homebrew                           |
 | `docker_tools.sh`  | List/connect/stop running containers    | `stop` can stop all running containers       | Docker daemon + CLI                |
-| `network_tools.sh` | Inspect network state and Wi-Fi metrics | `reset en0` toggles interface and uses sudo  | macOS networksetup/system_profiler |
+| `wifi_tools.sh`    | Inspect and manage Wi-Fi connection     | `reset` toggles Wi-Fi interface, uses sudo   | macOS networksetup/system_profiler |
 | `pip_check.sh`     | Check/update packages in activated venv | `-i` updates `pip` and outdated packages     | Python venv (activated)            |
 | `syntaxchecker.sh` | Lint shell scripts                      | None                                         | shellcheck                         |
 
 ### `brew_check.sh`
 
-- Checks outdated Homebrew formulae and casks.
-- Can install updates and clean Homebrew cache.
+Check and manage Homebrew updates.
+
+- Checks outdated formulae and casks.
+- Can install updates.
+- Can clean the Homebrew cache.
+
+Options:
+
+- `[none]`: Check for available updates
+- `-i, --install`: Install available updates
+- `-clean`: Clean Homebrew cache
+- `-h, --help`: Show help message
 
 Examples:
 
 ```sh
-./brew_check.sh
-./brew_check.sh --install
-./brew_check.sh -clean
+./brew_check.sh              # Check for updates
+./brew_check.sh -i           # Install updates
+./brew_check.sh -clean       # Clean cache
+./brew_check.sh -h           # Show help
 ```
 
 ### `docker_tools.sh`
@@ -61,7 +72,7 @@ Docker workflow helper for everyday container operations.
 Subcommands:
 
 - `list`: list running containers
-- `connect <id>`: open root shell in a running container
+- `connect <id>`: open interactive shell in a running container (`bash` then `sh` fallback)
 - `stop [-y]`: stop all running containers (`-y` skips confirmation)
 
 Examples:
@@ -73,26 +84,26 @@ Examples:
 ./docker_tools.sh stop -y
 ```
 
-### `network_tools.sh`
+### `wifi_tools.sh`
 
-Network workflow helper for local adapter/IP/Wi-Fi inspection.
+Wi-Fi inspection and management tool.
 
 Subcommands:
 
-- no args: show network adapters, IP addresses, and current Wi-Fi name
-- `wifi`: show current Wi-Fi signal metrics
-- `wifi <n>`: repeat Wi-Fi signal check `n` times (3s interval)
-- `list`: list previously connected Wi-Fi networks (preferred networks on `en0`)
-- `reset en0`: restart Wi-Fi adapter
+- no args: show current Wi-Fi signal
+- `signal`: show Wi-Fi signal metrics (channel, dBm, noise, SNR, Tx rate)
+- `signal <n>`: repeat signal check `n` times (3s interval)
+- `list`: list previously-connected Wi-Fi networks (preferred networks on `en0`)
+- `reset`: restart Wi-Fi adapter
 
 Examples:
 
 ```sh
-./network_tools.sh
-./network_tools.sh wifi
-./network_tools.sh wifi 10
-./network_tools.sh list
-./network_tools.sh reset en0
+./wifi_tools.sh                # Show current Wi-Fi signal
+./wifi_tools.sh signal         # Show signal metrics
+./wifi_tools.sh signal 10      # Repeat 10 times
+./wifi_tools.sh list           # List known networks
+./wifi_tools.sh reset          # Reset Wi-Fi adapter
 ```
 
 Note: on recent macOS versions, scanning nearby SSIDs via system tools may be redacted. The `list` command intentionally shows preferred (previously connected) networks for reliable output.
@@ -101,7 +112,7 @@ Note: on recent macOS versions, scanning nearby SSIDs via system tools may be re
 
 - Scripts are intended for interactive terminal usage, not unattended automation.
 - `docker_tools.sh stop` prompts by default; use `-y` only when you want non-interactive behavior.
-- `network_tools.sh reset en0` requires `sudo` and will temporarily interrupt network connectivity.
+- `wifi_tools.sh reset` requires `sudo` and will temporarily interrupt network connectivity.
 - `pip_check.sh` requires an activated Python virtual environment (`source venv/bin/activate`).
 - `syntaxchecker.sh` scans recursively from the provided path.
 
@@ -132,14 +143,20 @@ source myproject/venv/bin/activate
 
 ### `syntaxchecker.sh`
 
-- Runs `shellcheck` on `.sh` files.
-- Default target is current directory; optional target path is supported.
+Run `shellcheck` on `.sh` files.
+
+Arguments:
+
+- `[none]`: Lint all `.sh` files in the current directory
+- `PATH`: Lint all `.sh` files under the given path
+- `-h, --help`: Show help message
 
 Examples:
 
 ```sh
-./syntaxchecker.sh
-./syntaxchecker.sh .
+./syntaxchecker.sh             # Lint current directory
+./syntaxchecker.sh /some/path  # Lint a specific path
+./syntaxchecker.sh -h          # Show help
 ```
 
 ## Legacy Notes
@@ -147,7 +164,7 @@ Examples:
 The following scripts were merged into newer tools:
 
 - `connect_to_container.sh` + `stop_all_containers.sh` -> `docker_tools.sh`
-- `network.sh` + `wifi_strength.sh` -> `network_tools.sh`
+- `network.sh` + `wifi_strength.sh` -> `network_tools.sh` -> `wifi_tools.sh`
 
 ## Author
 
