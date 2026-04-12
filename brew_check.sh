@@ -62,23 +62,35 @@ done
 
 #update and calculation
 brew update
-brew_outdated_amount=$(brew outdated | wc -l)
-brew_cask_outdated_amount=$(brew outdated --cask --greedy | wc -l)
+brew_formula_outdated=$(brew outdated --formula)
+brew_cask_outdated=$(brew outdated --cask --greedy)
+
+if [ -n "$brew_formula_outdated" ]; then
+	brew_formula_outdated_amount=$(printf '%s\n' "$brew_formula_outdated" | wc -l)
+else
+	brew_formula_outdated_amount=0
+fi
+
+if [ -n "$brew_cask_outdated" ]; then
+	brew_cask_outdated_amount=$(printf '%s\n' "$brew_cask_outdated" | wc -l)
+else
+	brew_cask_outdated_amount=0
+fi
 
 list_updates() {
-	if [ "$brew_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
+	if [ "$brew_formula_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
 		exit 0
 	else
-		if [ "$brew_outdated_amount" -eq 0 ]; then
+		if [ "$brew_formula_outdated_amount" -eq 0 ]; then
 			printf '\nAvailable applications:\n'
-			brew outdated --cask --greedy
+			echo "$brew_cask_outdated"
 			exit 0
 		else
 			printf '\nAvailable formulae:\n'
-			brew outdated
+			echo "$brew_formula_outdated"
 			if [ "$brew_cask_outdated_amount" -ne 0 ]; then
 				printf '\nAvailable applications:\n'
-				brew outdated --cask --greedy
+				echo "$brew_cask_outdated"
 				exit 0
 			else
 				exit 0
@@ -97,11 +109,15 @@ else
 		while :; do
 			case $1 in
 			-i | --install)
-				if [ "$brew_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
+				if [ "$brew_formula_outdated_amount" -eq 0 ] && [ "$brew_cask_outdated_amount" -eq 0 ]; then
 					exit 0
 				else
-					brew upgrade
-					brew outdated --cask --greedy | cut -d = -f 1 | xargs -n1 brew upgrade --cask
+					if [ "$brew_formula_outdated_amount" -ne 0 ]; then
+						brew upgrade
+					fi
+					if [ "$brew_cask_outdated_amount" -ne 0 ]; then
+						printf '%s\n' "$brew_cask_outdated" | awk '{print $1}' | xargs -n1 brew upgrade --cask
+					fi
 				fi
 				brew cleanup -s && rm -rf "$(brew --cache)"
 				exit 0
