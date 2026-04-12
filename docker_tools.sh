@@ -78,12 +78,27 @@ fi
 
 case $1 in
 list)
+	if [ $# -gt 1 ]; then
+		echo "Error: 'list' takes no arguments." >&2
+		display_usage
+		exit 1
+	fi
 	list_containers
 	;;
 stop)
+	if [ $# -gt 2 ]; then
+		echo "Error: 'stop' takes at most one option [-y]." >&2
+		display_usage
+		exit 1
+	fi
 	stop_containers "$2"
 	;;
 connect)
+	if [ $# -gt 2 ]; then
+		echo "Error: 'connect' takes exactly one argument: <id>." >&2
+		display_usage
+		exit 1
+	fi
 	connect_to_container "$2"
 	;;
 -h | --help)

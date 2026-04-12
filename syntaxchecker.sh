@@ -4,40 +4,46 @@ scriptname=$0
 
 shellcheck_exist() {
 	type shellcheck >/dev/null 2>&1 || {
-		echo >&2 "You need to install shellcheck to use this script."
+		echo >&2 "Error: shellcheck is not installed. Install with: brew install shellcheck"
 		exit 1
 	}
 }
 
 display_usage() {
-	echo "Usage: $scriptname"
-	echo "Analyzes all .sh files in the current directory with shellcheck."
+	printf 'Usage: %s [PATH]\n' "$scriptname"
+	echo "Lint all .sh files using shellcheck."
+	echo ""
+	echo "Arguments:"
+	echo "  [none]    Lint all .sh files in the current directory"
+	echo "  PATH      Lint all .sh files under the given path"
+	echo "  -h        Show this help message"
+	printf '\n'
 }
 
 shellcheck_exist
 
-if [ $# -eq 0 ]; then
-	find . -name "*\.sh" -print0 | xargs -0 shellcheck
+# Parameter validation
+if [ $# -gt 1 ]; then
+	echo "Error: Too many arguments." >&2
+	display_usage
+	exit 1
 fi
 
-if [ $# -eq 1 ]; then
+case $1 in
+"")
+	find . -name "*.sh" -print0 | xargs -0 shellcheck
+	;;
+-h | --help)
+	display_usage
+	exit 0
+	;;
+*)
 	if [ -e "$1" ]; then
-		find "$1" -type f -name "*\.sh" -print0 2>/dev/null | xargs -0 shellcheck
+		find "$1" -type f -name "*.sh" -print0 2>/dev/null | xargs -0 shellcheck
 	else
-		while :; do
-			case $1 in
-			-h | --help)
-				echo ""
-				display_usage
-				exit 0
-				;;
-			*)
-				echo ""
-				echo "Incorrect parameter in use. Correct parameters given in the example below."
-				display_usage
-				exit 1
-				;;
-			esac
-		done
+		echo "Error: Path not found: $1" >&2
+		display_usage
+		exit 1
 	fi
-fi
+	;;
+esac
