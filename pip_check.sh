@@ -12,7 +12,6 @@ if [ -z "$VIRTUAL_ENV" ]; then
 fi
 
 pip_cmd="$VIRTUAL_ENV/bin/pip"
-venv_name=$(basename "$VIRTUAL_ENV")
 
 if ! [ -x "$pip_cmd" ]; then
 	echo "Error: pip not found at $pip_cmd" >&2
