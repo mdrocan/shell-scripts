@@ -2,104 +2,81 @@
 
 scriptname=$0
 
-hw=$(uname -m)
-if command -v brew >/dev/null 2>&1; then
-	brew_python_prefix=$(brew --prefix python 2>/dev/null)
-	for candidate in "$brew_python_prefix/bin/pip3" "$brew_python_prefix/libexec/bin/pip3"; do
-		if [ -x "$candidate" ]; then
-			pip3=$candidate
-			break
-		fi
-	done
-fi
-
-if [ -z "$pip3" ] && [ "$hw" = arm64 ]; then
-	for candidate in /opt/homebrew/bin/pip3 /opt/homebrew/opt/python@*/libexec/bin/pip3 /opt/homebrew/opt/python@*/bin/pip3*; do
-		if [ -x "$candidate" ]; then
-			pip3=$candidate
-			break
-		fi
-	done
-elif [ -z "$pip3" ] && [ "$hw" = x86_64 ]; then
-	for candidate in /usr/local/bin/pip3 /usr/local/opt/python@*/libexec/bin/pip3 /usr/local/opt/python@*/bin/pip3*; do
-		if [ -x "$candidate" ]; then
-			pip3=$candidate
-			break
-		fi
-	done
-elif [ -z "$pip3" ] && command -v pip3 >/dev/null 2>&1; then
-	pip3=$(command -v pip3)
-elif [ -z "$pip3" ]; then
-	echo "Unsupported architecture: $hw" >&2
+# Check if a virtual environment is activated
+if [ -z "$VIRTUAL_ENV" ]; then
+	echo "Error: No virtual environment is currently activated." >&2
+	echo "" >&2
+	echo "Please activate a virtual environment first:" >&2
+	echo "  source /path/to/venv/bin/activate" >&2
 	exit 1
 fi
 
-pip3_package_list() {
-	available_packages=$($pip3 list -o)
+pip_cmd="$VIRTUAL_ENV/bin/pip"
+venv_name=$(basename "$VIRTUAL_ENV")
+
+if ! [ -x "$pip_cmd" ]; then
+	echo "Error: pip not found at $pip_cmd" >&2
+	exit 1
+fi
+
+pip_package_list() {
+	available_packages=$($pip_cmd list -o)
 	if [ -z "$available_packages" ]; then
-		echo "No updates."
+		echo "No updates available."
 	else
 		echo "$available_packages"
 	fi
 }
 
-pip3_package_update() {
-	$pip3 install --upgrade pip
-	$pip3 list -o --no-cache-dir | sed 1,2d | awk '{print $1}' | xargs -n1 "$pip3" install -U
+pip_package_update() {
+	$pip_cmd install --upgrade pip
+	$pip_cmd list -o --no-cache-dir | sed 1,2d | awk '{print $1}' | xargs -n1 "$pip_cmd" install -U
 }
 
-#help template
 display_help() {
-	printf '\nUsage: %s []\n' "$scriptname"
-	echo "[empty]: Check for updates."
-	echo "-i / --install: Install updates."
-	echo "-l / --list: List installed pip packages."
-	printf -- '-h / --help : Help documentation (this doc).\n\n'
+	printf 'Usage: %s [OPTION]\n' "$scriptname"
+	echo "Check and manage pip packages in the activated virtual environment."
+	echo ""
+	echo "Options:"
+	echo "  [none]         Check for available updates"
+	echo "  -i, --install  Install available updates"
+	echo "  -l, --list     List all installed packages"
+	echo "  -h, --help     Show this help message"
+	printf '\n'
 }
 
-if [ -z "$pip3" ]; then
-	echo "pip3 not found in Homebrew Python installation" >&2
-	exit 1
-fi
-
-while [ $# -gt 1 ]; do
-	echo "Incorrect amount of parameters in use. Correct parameters given in the example below."
+# Parameter validation
+if [ $# -gt 1 ]; then
+	echo "Error: Too many arguments." >&2
 	display_help
 	exit 1
-done
-
-if [ $# -eq 0 ]; then
-	pip3_package_list
-	exit 0
-else
-	if [ $# -eq 1 ]; then
-		while :; do
-			case $1 in
-			-i | --install)
-				pip3_package_update
-				exit 0
-				;;
-			-l | --list)
-				$pip3 list
-				echo "---"
-				echo "Installed packages:"
-				$pip3 list | cut -d " " -f 1 | sed 1,2d | xargs "$pip3" show
-				exit 0
-				;;
-			-h | --help)
-				display_help
-				exit 0
-				;;
-			*)
-				echo "Incorrect parameter in use. Correct parameters given in the example below."
-				display_help
-				exit 1
-				;;
-			esac
-		done
-	else
-		echo "Incorrect amount of arguments. Currently accepted arguments listed below."
-		display_help
-		exit 1
-	fi
 fi
+
+# Main logic
+case $1 in
+"")
+	# No argument: check for updates
+	pip_package_list
+	exit 0
+	;;
+-i | --install)
+	pip_package_update
+	exit 0
+	;;
+-l | --list)
+	$pip_cmd list
+	echo "---"
+	echo "Installed packages:"
+	$pip_cmd list | cut -d " " -f 1 | sed 1,2d | xargs "$pip_cmd" show
+	exit 0
+	;;
+-h | --help)
+	display_help
+	exit 0
+	;;
+*)
+	echo "Error: Unknown option '$1'" >&2
+	display_help
+	exit 1
+	;;
+esac
