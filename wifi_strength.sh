@@ -1,12 +1,11 @@
 #!/bin/sh
 
 scriptname=$0
-listener=$(find "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/" -type f -iname airport)
 counter=0
 
 display_usage() {
 	echo "Usage: $scriptname []"
-	echo "[empty]: Check connection signal, will be tested 10 times. Default loop 3 seconds."
+	echo "[empty]: Check connection signal"
 	echo "::digit:: How many times the signal strength is tested. Default loop 3 seconds."
 	echo "-test: Looping forever (for connection testing purpose). Default loop 3 seconds."
 	echo "-h or --help: Help documentation."
@@ -15,12 +14,39 @@ display_usage() {
 
 show_connection() {
 	echo "-------------"
+
+	# Pure shell fallback for modern macOS where airport is removed.
+	# It is reliable but slower than the old airport output.
+	wifi_raw=$(system_profiler SPAirPortDataType -detailLevel basic 2>/dev/null)
+	section=$(echo "$wifi_raw" | awk '
+		/Current Network Information:/ { found=1; next }
+		found && /Other Local Wi-Fi Networks:/ { exit }
+		found { print }
+	')
+
+	if [ -z "$section" ]; then
+		echo "No WiFi connection detected."
+		return
+	fi
+
 	date "+Time: %H:%M:%S"
-	$listener -I |
-		awk 'BEGIN{FS="\n"} /channel|CtlRSSI|CtlNoise|lastTxRate|SSID:/ {print}' | sed -e 's/^[ \t]*//' \
-		-e 's/agrCtlRSSI/Wifi dBm/g' -e 's/lastTxRate/Tx Rate/g' -e 's/agrCtlNoise/Noise level/g' -e '/BSSID/d'
-	SNR=$($listener -I | awk 'BEGIN{FS="\n"} /CtlRSSI|CtlNoise/ {print}' | awk '{print $NF}' | awk 'NR==1{SNR = $0; next} { SNR -= $0} END {print SNR}')
-	echo "SNR value: ""$SNR"
+	CHANNEL=$(echo "$section" | sed -n 's/^[[:space:]]*Channel: //p' | head -1)
+	SIG_NOISE=$(echo "$section" | sed -n 's/^[[:space:]]*Signal \/ Noise: //p' | head -1)
+	TX_RATE=$(echo "$section" | sed -n 's/^[[:space:]]*Transmit Rate: //p' | head -1)
+	RSSI=$(echo "$SIG_NOISE" | awk -F' / ' '{print $1}' | awk '{print $1}')
+	NOISE=$(echo "$SIG_NOISE" | awk -F' / ' '{print $2}' | awk '{print $1}')
+
+	[ -n "$CHANNEL" ] && echo "channel: $CHANNEL"
+	[ -n "$RSSI" ] && echo "Wifi dBm: $RSSI"
+	[ -n "$NOISE" ] && echo "Noise level: $NOISE"
+	[ -n "$TX_RATE" ] && echo "Tx Rate: $TX_RATE"
+
+	if [ -n "$RSSI" ] && [ -n "$NOISE" ]; then
+		SNR=$((RSSI - NOISE))
+	else
+		SNR="N/A"
+	fi
+	echo "SNR value: $SNR"
 }
 
 if [ $# -gt 1 ]; then
@@ -32,12 +58,6 @@ fi
 if [ $# -eq 0 ]; then
 	printf "\nCurrent connection:\n"
 	show_connection
-	printf "\nTest loops (10), with 3 seconds wait time:\n"
-	while [ $counter -lt 10 ]; do
-		sleep 3
-		show_connection
-		counter=$((counter + 1))
-	done
 fi
 
 if [ $# -eq 1 ]; then
