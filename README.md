@@ -20,7 +20,7 @@ Use `--help` first on each script to verify expected behavior in your environmen
 ## Design
 
 - Keep tools small, composable, and script-friendly.
-- Prefer one script per domain (package management, Docker, networking, linting).
+- Prefer one script per domain (package management, Docker, Wi-Fi networking, linting).
 - Use subcommands where workflows naturally belong together.
 
 ## Requirements
@@ -72,7 +72,7 @@ Docker workflow helper for everyday container operations.
 Subcommands:
 
 - `list`: list running containers
-- `connect <id>`: open root shell in a running container
+- `connect <id>`: open interactive shell in a running container (`bash` then `sh` fallback)
 - `stop [-y]`: stop all running containers (`-y` skips confirmation)
 
 Examples:
