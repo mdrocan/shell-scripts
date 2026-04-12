@@ -17,7 +17,7 @@ display_usage() {
 	echo "Usage: $scriptname [command] [options]"
 	echo ""
 	echo "Commands:"
-	echo "  (no args)         : Show current Wi-Fi signal."
+	echo "  (no args)         : Show this help."
 	echo "  signal            : Show current Wi-Fi signal metrics."
 	echo "  signal <n>        : Repeat signal check n times (3s interval)."
 	echo "  list              : List previously-connected Wi-Fi networks."
@@ -112,9 +112,16 @@ reset_wifi() {
 
 case $1 in
 "")
-	show_wifi_signal
+	display_usage
+	exit 0
 	;;
 signal)
+	if [ $# -gt 2 ]; then
+		echo "Error: 'signal' takes at most one argument: <n>." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
 	show_wifi_signal
 	if [ -n "$2" ]; then
 		if [ "$2" -gt 0 ] 2>/dev/null; then
@@ -132,6 +139,12 @@ signal)
 	fi
 	;;
 list)
+	if [ $# -gt 1 ]; then
+		echo "Error: 'list' takes no arguments." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
 	list_wifi_networks
 	;;
 reset)
@@ -140,6 +153,7 @@ reset)
 		display_usage
 		exit 1
 	fi
+	ensure_wifi_tools_ready
 	reset_wifi
 	;;
 -h | --help)
