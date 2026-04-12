@@ -33,13 +33,13 @@ Use `--help` first on each script to verify expected behavior in your environmen
 
 ## Scripts
 
-| Script             | Main use                                | Side effects                                    | Depends on                         |
-|--------------------|-----------------------------------------|-------------------------------------------------|------------------------------------|
-| `brew_check.sh`    | Check/install Homebrew updates          | May install/update packages; may clean cache    | Homebrew                           |
-| `docker_tools.sh`  | List/connect/stop running containers    | `stop` can stop all running containers          | Docker daemon + CLI                |
-| `network_tools.sh` | Inspect network state and Wi-Fi metrics | `reset en0` toggles interface and uses sudo     | macOS networksetup/system_profiler |
-| `pip_check.sh`     | Check/update Python packages            | `--install` updates `pip` and outdated packages | Python `pip3`                      |
-| `syntaxchecker.sh` | Lint shell scripts                      | None                                            | shellcheck                         |
+| Script             | Main use                                | Side effects                                 | Depends on                         |
+|--------------------|-----------------------------------------|----------------------------------------------|------------------------------------|
+| `brew_check.sh`    | Check/install Homebrew updates          | May install/update packages; may clean cache | Homebrew                           |
+| `docker_tools.sh`  | List/connect/stop running containers    | `stop` can stop all running containers       | Docker daemon + CLI                |
+| `network_tools.sh` | Inspect network state and Wi-Fi metrics | `reset en0` toggles interface and uses sudo  | macOS networksetup/system_profiler |
+| `pip_check.sh`     | Check/update packages in activated venv | `-i` updates `pip` and outdated packages     | Python venv (activated)            |
+| `syntaxchecker.sh` | Lint shell scripts                      | None                                         | shellcheck                         |
 
 ### `brew_check.sh`
 
@@ -102,21 +102,32 @@ Note: on recent macOS versions, scanning nearby SSIDs via system tools may be re
 - Scripts are intended for interactive terminal usage, not unattended automation.
 - `docker_tools.sh stop` prompts by default; use `-y` only when you want non-interactive behavior.
 - `network_tools.sh reset en0` requires `sudo` and will temporarily interrupt network connectivity.
-- `pip_check.sh --install` updates global packages for the selected `pip3`; use a virtual environment when needed.
+- `pip_check.sh` requires an activated Python virtual environment (`source venv/bin/activate`).
 - `syntaxchecker.sh` scans recursively from the provided path.
 
 ### `pip_check.sh`
 
-- Shows outdated `pip3` packages.
+Manage pip packages in an activated virtual environment.
+
+- Checks for outdated packages in the venv.
 - Can update `pip` and installed Python packages.
-- Can list installed package metadata.
+- Can list all installed package metadata.
+
+Options:
+
+- `[none]`: Check for available updates
+- `-i, --install`: Install available updates
+- `-l, --list`: List all installed packages
+- `-h, --help`: Show help message
 
 Examples:
 
 ```sh
-./pip_check.sh
-./pip_check.sh --install
-./pip_check.sh --list
+source myproject/venv/bin/activate
+./pip_check.sh              # Check for updates
+./pip_check.sh -i           # Install updates
+./pip_check.sh -l           # List installed packages
+./pip_check.sh -h           # Show help
 ```
 
 ### `syntaxchecker.sh`
