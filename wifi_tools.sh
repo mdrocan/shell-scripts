@@ -112,9 +112,21 @@ reset_wifi() {
 
 case $1 in
 "")
+	if [ $# -gt 1 ]; then
+		echo "Error: Unexpected arguments for default command." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
 	show_wifi_signal
 	;;
 signal)
+	if [ $# -gt 2 ]; then
+		echo "Error: 'signal' takes at most one argument: <n>." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
 	show_wifi_signal
 	if [ -n "$2" ]; then
 		if [ "$2" -gt 0 ] 2>/dev/null; then
@@ -132,6 +144,12 @@ signal)
 	fi
 	;;
 list)
+	if [ $# -gt 1 ]; then
+		echo "Error: 'list' takes no arguments." >&2
+		display_usage
+		exit 1
+	fi
+	ensure_wifi_tools_ready
 	list_wifi_networks
 	;;
 reset)
@@ -140,6 +158,7 @@ reset)
 		display_usage
 		exit 1
 	fi
+	ensure_wifi_tools_ready
 	reset_wifi
 	;;
 -h | --help)
