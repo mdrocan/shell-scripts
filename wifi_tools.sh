@@ -17,7 +17,7 @@ display_usage() {
 	echo "Usage: $scriptname [command] [options]"
 	echo ""
 	echo "Commands:"
-	echo "  (no args)         : Show current Wi-Fi signal."
+	echo "  (no args)         : Show this help."
 	echo "  signal            : Show current Wi-Fi signal metrics."
 	echo "  signal <n>        : Repeat signal check n times (3s interval)."
 	echo "  list              : List previously-connected Wi-Fi networks."
@@ -112,13 +112,8 @@ reset_wifi() {
 
 case $1 in
 "")
-	if [ $# -gt 1 ]; then
-		echo "Error: Unexpected arguments for default command." >&2
-		display_usage
-		exit 1
-	fi
-	ensure_wifi_tools_ready
-	show_wifi_signal
+	display_usage
+	exit 0
 	;;
 signal)
 	if [ $# -gt 2 ]; then

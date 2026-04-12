@@ -90,7 +90,7 @@ Wi-Fi inspection and management tool.
 
 Subcommands:
 
-- no args: show current Wi-Fi signal
+- no args: show help
 - `signal`: show Wi-Fi signal metrics (channel, dBm, noise, SNR, Tx rate)
 - `signal <n>`: repeat signal check `n` times (3s interval)
 - `list`: list previously-connected Wi-Fi networks (preferred networks on `en0`)
@@ -99,7 +99,7 @@ Subcommands:
 Examples:
 
 ```sh
-./wifi_tools.sh                # Show current Wi-Fi signal
+./wifi_tools.sh                # Show help
 ./wifi_tools.sh signal         # Show signal metrics
 ./wifi_tools.sh signal 10      # Repeat 10 times
 ./wifi_tools.sh list           # List known networks
