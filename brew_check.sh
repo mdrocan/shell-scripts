@@ -93,7 +93,7 @@ case $1 in
 		echo "No updates available."
 	else
 		if [ "$brew_formula_outdated_amount" -ne 0 ]; then
-			brew upgrade
+			brew upgrade --formula
 		fi
 		if [ "$brew_cask_outdated_amount" -ne 0 ]; then
 			printf '%s\n' "$brew_cask_outdated" | awk '{print $1}' | xargs -n1 brew upgrade --cask
